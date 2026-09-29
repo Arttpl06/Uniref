@@ -37,18 +37,31 @@ Separar fixtures fictícias de dados reais. Não executar limpeza de teste em ba
 - Validar todos os corpos, parâmetros e query strings no servidor. Selecionar campos permitidos explicitamente; não passar req.body diretamente a model.update.
 - Consultas parametrizadas/ORM; proprietário vem da sessão; não confiar na ocultação de botões do frontend.
 - Logs estruturados com requestId, rota, status e duração, sem corpo bibliográfico ou credenciais por padrão.
-- Coletar só nome, e-mail e referências; definir aviso de privacidade, retenção e canal de exclusão antes de abrir a usuários reais. Isso é requisito de produto a revisar, não certificação jurídica.
+- Usar apenas contas, e-mails e referências fictícios na demonstração. Operação pública não faz parte da entrega.
 
 ## Publicação
 
-Hospedagem deve suportar processo Node persistente, frontend estático, HTTPS e MySQL. Propor mesma origem para simplificar cookies e CSRF. Selecionar fornecedor somente depois de conhecer orçamento, permissões da disciplina e exigência de disponibilidade.
+A demonstração pode ocorrer localmente ou em hospedagem de demonstração. Se hospedado, o ambiente deve suportar Node, frontend estático, HTTPS e MySQL. Usar mesma origem para simplificar cookies e CSRF. Documentar preparação e restauração dos dados fictícios antes da última aula.
 
 Pipeline planejado: npm ci → lint → testes → build React → migration revisada → deploy → smoke test. Antes de migration destrutiva, fazer backup e planejar compatibilidade da aplicação anterior. Reverter aplicação não reverte automaticamente dados.
 
 Smoke test após deploy: página abre; prévia funciona; login funciona; registro é salvo; logout encerra sessão; usuário diferente não lê o registro. Monitorar erros 5xx e falhas de conexão.
 
-## Critério final de entrega do MVP
+## Critério de entrega final
 
-Todos os RFs do MVP ratificado atendidos; corpus dos tipos liberados revisado; testes de isolamento e sessão aprovados; tarefas principais utilizáveis; migrations reproduzíveis; ambiente publicado; instruções de execução atualizadas com comandos reais; limitações listadas.
+Todos os RFs do escopo final ratificado atendidos; corpus dos tipos liberados revisado; testes de isolamento e sessão aprovados; tarefas principais utilizáveis; migrations reproduzíveis; ambiente de demonstração funcional; instruções de execução atualizadas com comandos reais; limitações listadas.
 
-Recuperação de senha e validação de e-mail podem ficar fora da demonstração com contas fictícias, mas devem ser reavaliadas antes de um serviço público permanente. Conformidade Unifor não deve ser anunciada enquanto o manual não for validado.
+Recuperação de senha por e-mail, operação pública e padrão específico da Unifor estão fora do escopo atual. A apresentação final inclui referências e citações funcionando; as etapas internas não são entregas parciais.
+
+## Testes de citações
+
+| Caso | Requisitos | Verificação |
+|---|---|---|
+| T16 Chamada indireta | RF15, RF19 | Narrativa Silva (2025) e parentética (Silva, 2025), sem aspas adicionadas |
+| T17 Direta curta | RF20–21 | Trecho obrigatório, aspas e localizador quando disponível; metadados preservados |
+| T18 Direta longa | RF19–21 | Bloco sem aspas externas, orientações de recuo/fonte/espaçamento, sem inferir linhas pelo tamanho da string |
+| T19 Fonte sem páginas | RF20 | Não inventar página; confirmação explícita de ausência de localizador; aviso de revisão |
+| T20 Citação de referência salva | RF22, RN03 | Acesso cruzado retorna 404; mesma fonte pode gerar diversas chamadas sem alterar histórico |
+| T21 Regras contextuais | RN16–17 | Sobrenomes, autoria institucional/desconhecida, múltiplos autores e colisão autor/ano conforme corpus; casos sem suporte não passam silenciosamente |
+
+Resultados esperados devem ser revisados contra NBR 10520:2023. A implementação ainda não foi executada ou homologada.

@@ -11,10 +11,15 @@ Proposta de engenharia para o projeto acadêmico da equipe de Artur Pinheiro, Ed
 3. [BANCO_DE_DADOS.md](documentacao/BANCO_DE_DADOS.md): modelo e regras de persistência.
 4. [API.md](documentacao/API.md): contratos entre React e Express.
 5. [MOTOR_ABNT.md](documentacao/MOTOR_ABNT.md): escopo normativo e estratégia de validação.
-6. [DESENVOLVIMENTO.md](documentacao/DESENVOLVIMENTO.md): sequência de implementação e organização da equipe.
-7. [TESTES_E_ENTREGA.md](documentacao/TESTES_E_ENTREGA.md): critérios de qualidade, segurança e publicação.
-8. [APRESENTACAO.md](documentacao/APRESENTACAO.md): resumo para apresentar ao professor.
-9. [FONTES_E_DECISOES.md](documentacao/FONTES_E_DECISOES.md): fontes, decisões e pontos em aberto.
+6. [CITACOES.md](documentacao/CITACOES.md): especificação das citações da entrega final.
+7. [DESENVOLVIMENTO.md](documentacao/DESENVOLVIMENTO.md): sequência de implementação e organização da equipe.
+8. [TESTES_E_ENTREGA.md](documentacao/TESTES_E_ENTREGA.md): critérios de qualidade, segurança e publicação.
+9. [APRESENTACAO.md](documentacao/APRESENTACAO.md): resumo para apresentar ao professor.
+10. [FONTES_E_DECISOES.md](documentacao/FONTES_E_DECISOES.md): fontes, decisões e pontos em aberto.
+
+## Escopo atual
+
+A entrega final reúne o gerador de referências e o gerador de citações para uma demonstração acadêmica completa na última aula. A cobertura de referências permanece limitada a livro completo, artigo de periódico, página web e trabalho acadêmico; outros tipos de fonte e o padrão específico da Unifor ficam fora do escopo desta etapa.
 
 ## Decisão central
 

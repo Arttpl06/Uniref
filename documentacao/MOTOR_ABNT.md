@@ -4,7 +4,7 @@
 
 O motor transforma um documento estruturado em `{plainText, segments, warnings, standardVersion, formatterVersion, institutionalProfile}`. Deve ser determinístico: mesma entrada normalizada e mesma versão geram a mesma saída, sem consulta à internet, data atual implícita ou aleatoriedade.
 
-Base de trabalho: NBR 6023:2025 fornecida no ZIP. Citações são outro produto, relacionado à NBR 10520:2023. As versões antigas no acervo servem para comparação, não devem ser misturadas com a versão escolhida. Guias secundários ajudam na interpretação, mas a decisão final deve ser conferida no texto normativo e homologada.
+Base de trabalho: NBR 6023:2025 fornecida no ZIP. Citações são uma funcionalidade obrigatória da mesma entrega, com motor próprio baseado na NBR 10520:2023 e contrato em CITACOES.md. As versões antigas no acervo servem para comparação, não devem ser misturadas com a versão escolhida. Guias secundários ajudam na interpretação, mas a decisão final deve ser conferida no texto normativo e homologada.
 
 ## Pipeline
 
@@ -43,7 +43,7 @@ Funções compartilhadas: formatAuthors, formatPublicationDate, formatAccessDate
 | Página web | Responsabilidade quando identificada, título, identificação do site/fonte e data disponível | URL e acesso; local/editor quando pertinentes; ausência de autoria ou data segue regra específica homologada |
 | Trabalho acadêmico | Autoria, título, ano de depósito, natureza (TCC/dissertação/tese), grau/curso, instituição, local e data de defesa/apresentação | Subtítulo, descrição física e dados complementares conforme perfil; online exige URL e acesso |
 
-Datas de publicação devem permitir representação fiel ao documento. Proposta de modelo: `{literal, kind}`, com kind exact, approximate ou unknown. O MVP inicial pode aceitar apenas exact e bloquear os demais com explicação até homologação. Não transformar `unknown` em data inventada nem assumir automaticamente “s.d.”.
+Datas de publicação devem permitir representação fiel ao documento. Proposta de modelo: `{literal, kind}`, com kind exact, approximate ou unknown. O desenvolvimento inicial pode aceitar apenas exact e bloquear os demais com explicação até homologação. Não transformar `unknown` em data inventada nem assumir automaticamente “s.d.”.
 
 A interface deve mostrar os limites reais de cobertura. “Página web” é uma família simplificada: legislação, vídeo e artigo em uma URL não passam automaticamente a ser página web. Oferecer ajuda para escolher o tipo correto.
 
@@ -82,4 +82,4 @@ Ao atualizar o motor: adicionar teste que reproduz o problema; corrigir; executa
 
 Texto simples perde negrito/itálico. Oferecer cópia rica com text/html e text/plain quando o navegador permitir; montar HTML só com texto escapado e tags controladas. Na falha, copiar texto e explicar a limitação. Não usar HTML arbitrário digitado pelo usuário nem dangerouslySetInnerHTML.
 
-URL é metadado, não comando para o servidor acessar um site. Aceitar somente http/https e não buscar conteúdo remoto no MVP. Isso também evita introduzir coleta externa e riscos de requisições a endereços internos.
+URL é metadado, não comando para o servidor acessar um site. Aceitar somente http/https e não buscar conteúdo remoto no escopo final. Isso também evita introduzir coleta externa e riscos de requisições a endereços internos.

@@ -33,19 +33,31 @@ Recomendações de organização de camadas, divisão de trabalho e metas de des
 | ADR04 | Sessão no MySQL com cookie | Logout simples; requer CSRF e store persistente |
 | ADR05 | Motor determinístico no backend | Resultado centralizado, testável e independente do frontend |
 | ADR06 | Guardar entrada e resultado versionados | Edição possível e histórico estável após correções do motor |
-| ADR07 | Quatro famílias no MVP | Escopo verificável; demais tipos entram por incremento |
+| ADR07 | Quatro famílias no escopo final | Escopo verificável; ampliação de tipos suspensa |
 | ADR08 | Geração pública, salvamento explícito | Menor barreira de uso; necessidade de rate limit |
 | ADR09 | Campos comuns em colunas, específicos em JSON | Menos tabelas por subtipo; schemas e migrações de payload exigem disciplina |
-| ADR10 | NBR 6023:2025 como base proposta | Perfil Unifor separado e pendente de manual |
+| ADR10 | NBR 6023:2025 para referências; NBR 10520:2023 para citações | Padrão específico da Unifor fora do escopo atual |
 
 ## Perguntas a resolver na primeira reunião
 
 1. Qual a data da entrega e a dedicação semanal de cada integrante?
-2. O professor exige citações além de referências? Quais tipos e sistemas de chamada?
-3. Qual manual e edição a Unifor adota para esse trabalho? Há divergências com a norma enviada?
+2. Revisar a delimitação técnica proposta: autor-data, diretas curtas/longas e indiretas. A inclusão de citações já está confirmada.
+3. Conferir exemplos de referência e citação contra as normas enviadas; manual da Unifor fica fora do escopo atual.
 4. Quem poderá revisar as saídas: professor, bibliotecário ou orientador?
-5. O sistema será apenas demonstrado ou receberá usuários reais?
+5. Definir ambiente da demonstração: local ou hospedado. Não haverá usuários reais.
 6. Qual orçamento e ambiente de hospedagem estão disponíveis?
 7. Qual nome e licença o grupo adotará? “Aberta” no slide precisa ser traduzida em uma licença deliberada.
 
-Essas pendências não impedem começar o fluxo de livro e a estrutura técnica, mas impedem prometer escopo normativo integral, adoção institucional e prazo fechado.
+O grupo confirmou entrega única completa na última aula, incluindo citações, com uso exclusivo para demonstração. Ampliação de tipos e padrão institucional estão suspensos. Permanecem a homologação das saídas e a organização do calendário.
+
+## Decisões confirmadas pelo grupo nesta revisão
+
+- G01: citações fazem parte do projeto completo.
+- G02: uso apenas em demonstração acadêmica, sem operação para usuários reais.
+- G03: desenvolvimento ao longo da disciplina e apresentação completa na última aula; nenhuma primeira entrega separada.
+- G04: não ampliar os tipos além das famílias já documentadas por enquanto.
+- G05: deixar de lado o padrão específico da Unifor nesta etapa.
+
+**Proposta técnica decorrente:** autor-data com diretas curtas/longas e indiretas; sistema numérico, apud e desambiguação automática de uma bibliografia inteira não são prometidos. O grupo ainda pode ajustar essa delimitação, sem alterar a decisão já confirmada de incluir citações.
+
+Correção do exemplo anterior na conversa: para o padrão 10520:2023, o exemplo de pessoa física deve ser `(Silva, 2025)`, não `(SILVA, 2025)`. A regra da chamada no texto difere da entrada da referência. Consultadas as seções 6.1, 7.1 e 7.2 do PDF enviado.

@@ -42,7 +42,7 @@ Gerar token via mecanismo sincronizado: armazenar valor imprevisível na sessão
 }
 ```
 
-Exemplo fictício. Perfil normativo é fixado pelo servidor no MVP; usuário não pode enviar versões arbitrárias. Schemas estritos rejeitam userId, plainText, campos extras e valores de tipo desconhecidos. Limites propostos: body 64 KiB; título 1.000 caracteres; até 50 autores; URL até 2.048 caracteres. São limites técnicos, não regras ABNT.
+Exemplo fictício. Perfil normativo é fixado pelo servidor no escopo final; usuário não pode enviar versões arbitrárias. Schemas estritos rejeitam userId, plainText, campos extras e valores de tipo desconhecidos. Limites propostos: body 64 KiB; título 1.000 caracteres; até 50 autores; URL até 2.048 caracteres. São limites técnicos, não regras ABNT.
 
 ## Saída de prévia
 
@@ -91,3 +91,25 @@ Não expor stack trace, SQL, hash ou senha. Validação de existência de e-mail
 Usar fetch centralizado, `credentials: 'include'`, header CSRF em mutações, timeout via AbortController e tratamento de respostas não JSON. Não chamar response.json() em 204. Diferenciar erro de campo, autenticação e rede.
 
 Em desenvolvimento, configurar proxy Vite de /api para a API local. Em produção, servir SPA e API sob a mesma origem via proxy reverso. Se forem origens separadas, permitir apenas a origem explícita com credenciais; nunca CORS `*` com cookies. Não guardar sessão em localStorage.
+
+## Citações: novo contrato da entrega final
+
+`POST /api/v1/citations/preview`, com CSRF e rate limit: gera chamada/citação sem persistir. Permite exatamente uma fonte: `source.document` com o documento estruturado do contrato de referências, ou `source.referenceId` UUID de referência salva. A segunda opção exige login e busca por id + userId; retorna 404 para fonte alheia.
+
+```json
+{
+  "source": { "referenceId": "6f21cf49-b00a-438d-971d-1e9f6ba47b06" },
+  "system": "authorDate",
+  "kind": "directShort",
+  "placement": "parenthetical",
+  "excerpt": "A organização facilita a consulta.",
+  "locator": { "kind": "page", "value": "12" },
+  "sourceHasNoLocator": false
+}
+```
+
+Exemplo fictício, com chamada esperada `(Silva, 2025, p. 12)` para uma fonte de Ana Silva de 2025. `kind`: indirect, directShort ou directLong. `placement`: narrative ou parenthetical. `locator`: page ou location, com texto limitado e validado; null somente nas condições de CITACOES.md. Não aceitar author/year extras para sobrescrever os metadados da fonte salva.
+
+Resposta: `{data: {callout, composedText, segments, presentation, warnings, citationStandardVersion, citationFormatterVersion}}`. Norma de citação: `ABNT NBR 10520:2023`. `composedText` é null se a indireta solicitar somente chamada. `presentation` identifica inline ou block e fornece orientações; a aplicação não garante layout no editor de destino. Usar os mesmos erros padronizados da API; direta sem trecho ou localização contraditória retorna 422. Não aceitar source com document e referenceId juntos.
+
+Limites técnicos propostos: excerpt até 10.000 caracteres, locator.value até 100, body total 64 KiB. Não armazenar texto citado em logs. Chamada narrativa fica separada para encaixe na redação; a composição demonstrativa pode usar dois-pontos depois dela, sem inventar frases atribuídas ao autor.

@@ -6,27 +6,27 @@ Estudantes precisam converter os dados de uma fonte em uma referência acadêmic
 
 A ferramenta não confirma que uma obra existe nem que os dados digitados são verdadeiros. Ela formata informações fornecidas. Evitar a promessa de “eliminar todos os erros”: qualidade bibliográfica também depende da entrada e da revisão das regras.
 
-O público previsto no slide inclui estudantes, professores e pesquisadores da Unifor. Trata-se de um projeto acadêmico voltado à instituição, sem confirmação de adoção institucional. O manual específico da Unifor não foi fornecido; conformidade institucional permanece pendente de validação.
+O sistema será desenvolvido durante a disciplina e demonstrado completo na última aula, usando contas e dados fictícios. Não haverá operação para usuários reais. O padrão específico da Unifor está fora do escopo atual por decisão do grupo.
 
 ## 2. O que foi extraído dos anexos
 
 | Evidência | Consequência no projeto |
 |---|---|
-| Slide 6: cadastro, login, tipos de fontes, geração, cópia e histórico | Núcleo funcional do MVP |
+| Slide 6: cadastro, login, tipos de fontes, geração, cópia e histórico | Núcleo funcional do escopo final |
 | Slide 7: selecionar fonte, preencher e gerar em menos de 2 minutos | Fluxo curto e meta de teste de usabilidade |
 | Slide 8: React, Node.js e MySQL | Restrições tecnológicas respeitadas |
-| Slide 1 menciona citações e referências | Separar os dois produtos e confirmar prioridade das citações |
-| ZIP contém NBR 6023:2025 e 2018; NBR 10520:2023 e 2002; guias | Propor 6023:2025 para referências e 10520:2023 para futura funcionalidade de citações |
+| Slide 1 menciona citações e referências | Citações e referências confirmadas na entrega final pelo grupo |
+| ZIP contém NBR 6023:2025 e 2018; NBR 10520:2023 e 2002; guias | Propor 6023:2025 para referências e 10520:2023 para a funcionalidade obrigatória de citações |
 
-A lista de tipos do slide é aberta. Para torná-la executável, propõe-se livro completo, artigo de periódico, página web e trabalho acadêmico (TCC, dissertação e tese). Capítulo de livro, legislação, vídeo, evento e demais fontes ficam para incrementos posteriores.
+O escopo de tipos permanece limitado às quatro famílias já documentadas: livro completo, artigo de periódico, página web e trabalho acadêmico (incluindo tese). TCC e dissertação permanecem como subtipos propostos dessa família. A ampliação para outros tipos fica suspensa por decisão do grupo.
 
 ## 3. Escopo proposto
 
-**MVP:** geração pública sem cadastro; quatro famílias de documentos; validação por tipo; visualização e cópia; cadastro, login e logout; salvamento explícito para usuário autenticado; histórico privado com consulta, edição e exclusão; identificação da versão normativa.
+**Escopo final:** geração pública sem cadastro; quatro famílias de documentos; validação por tipo; visualização e cópia; cadastro, login e logout; salvamento explícito para usuário autenticado; histórico privado com consulta, edição e exclusão; identificação da versão normativa; geração e cópia de citações diretas e indiretas no sistema autor-data, conforme detalhado em CITACOES.md.
 
 A geração pública e o botão “Salvar” são decisões propostas, não exigências explícitas do slide. O histórico é uma biblioteca das referências salvas, não um registro de cada clique em Gerar. Isso evita acumular tentativas incompletas e torna a persistência previsível.
 
-**Depois do MVP:** citações no texto, coleções por trabalho, exportação DOCX/PDF/BibTeX, busca de metadados por DOI/ISBN, recuperação de senha por e-mail, login institucional e compartilhamento. Se o professor considerar citações obrigatórias, incluí-las formalmente no escopo e reestimar o cronograma antes de programar.
+**Fora da entrega:** coleções por trabalho, exportação DOCX/PDF/BibTeX, busca de metadados por DOI/ISBN, recuperação de senha por e-mail, login institucional e compartilhamento. O sistema autor-data é a delimitação técnica proposta para citações; ver CITACOES.md. As etapas de desenvolvimento são internas: não há entrega parcial ao professor.
 
 ## 4. Stack recomendada
 
@@ -117,7 +117,7 @@ Observer/event bus não é necessário: React já atualiza a interface a partir 
 | backend/src/server.js | Validar ambiente, conectar banco e iniciar servidor |
 | backend/src/modules/auth/ | Routes, controller, service e repository de autenticação |
 | backend/src/modules/references/ | Routes, controller, service e repository de referências |
-| backend/src/domain/formatters/ | Registry e formatadores por tipo |
+| backend/src/domain/formatters/ | Registry e formatadores de referências por tipo |
 | backend/src/domain/rules/ | Autores, datas, pontuação, títulos e perfis normativos |
 | backend/src/middlewares/ | Autenticação, CSRF, limite e erros |
 | backend/src/database/models/ | Models e associações |
@@ -157,4 +157,10 @@ Não usar o sobrenome deduzido automaticamente a partir do último espaço: nome
 
 Conformidade só pode ser declarada para os tipos e casos homologados. Manter uma matriz de exemplos conferidos com docente ou bibliotecário, identificando seção da norma, entrada e saída esperada. O MORE serve como referência de experiência de uso; não é API do projeto nem oráculo de conformidade para uma edição diferente da norma.
 
-A documentação detalhada de banco, API, requisitos, testes e implementação está nos demais arquivos desta pasta.
+A documentação detalhada de banco, API, requisitos, testes e implementação está nos demais arquivos desta pasta. [CITACOES.md](CITACOES.md) especifica as citações e sua relação com as referências.
+
+## 10. Citações na arquitetura
+
+Adicionar `backend/src/modules/citations/` para a rota/controller/service e `backend/src/domain/citations/` para funções puras de chamadas autor-data e composição. No frontend, `features/citations/` terá formulário de modalidade, posicionamento, trecho e localizador, além da prévia e dos botões de cópia.
+
+O serviço recebe metadados de uma fonte ou carrega uma referência salva do proprietário. Reutiliza autores e data estruturados, sem tentar extrair esses dados da referência pronta. O motor retorna chamada, citação composta quando aplicável, orientações e versão NBR 10520:2023. Não inventa trechos nem parafraseia o conteúdo da obra. A geração de citações não exige tabela adicional: as opções são transitórias na proposta atual.

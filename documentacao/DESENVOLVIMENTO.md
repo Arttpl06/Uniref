@@ -10,7 +10,7 @@ Antes de tentar todos os formulários, construir uma fatia funcional: dados de u
 
 ### Passo 1 — Decisões e ambiente
 
-Ratificar RFs e confirmar com professor: citações entram nesta entrega? Qual manual da Unifor deve prevalecer? Qual prazo real? As quatro famílias são suficientes? O MVP terá usuários reais ou somente contas de demonstração?
+Decisões confirmadas: citações fazem parte da entrega final; uso somente para demonstração; apresentação completa na última aula. Padrão Unifor e ampliação de tipos ficam fora do escopo atual. Definir data da aula, dedicação de cada integrante e revisar a delimitação técnica de citações em CITACOES.md.
 
 Instalar Node 24 LTS, Git e MySQL 8.4 no ambiente de desenvolvimento; Docker é opcional. Fixar versões usadas e criar banco de desenvolvimento e banco de teste separados. Usuário da aplicação não deve ser root.
 
@@ -34,13 +34,13 @@ Criar formatter puro de livro, validar segmentos/texto e expor POST /preview. Co
 
 Criar migrations e models; implementar hash, sessão, CSRF, login e logout. Em seguida salvar e listar referências com filtros por userId. Implementar edição com version e exclusão. Testar com dois usuários antes de liberar a tela de histórico.
 
-### Passo 6 — Novos tipos e homologação
+### Passo 6 — Tipos previstos, citações e homologação
 
-Adicionar artigo, página web e trabalho acadêmico, repetindo schema → fixture → formatter → formulário → teste integrado. Não liberar um tipo cujo caso comum ainda não foi revisado. Atualizar matriz de cobertura e ajuda da interface.
+Adicionar artigo, página web e trabalho acadêmico, repetindo schema → fixture → formatter → formulário → teste integrado. Não liberar um tipo cujo caso comum ainda não foi revisado. Implementar em paralelo o motor de citações autor-data, seu formulário e testes. Integrar chamada narrativa/parentética, direta curta/longa e indireta. Atualizar matriz de cobertura e ajuda da interface.
 
 ### Passo 7 — Revisão e entrega
 
-Revisar acessibilidade e usabilidade, medir metas, testar migrations e restauração. Publicar em ambiente de demonstração com HTTPS e MySQL. Registrar limitações conhecidas e preparar roteiro com dados fictícios.
+Revisar acessibilidade e usabilidade, medir metas, testar migrations e restauração. Preparar ambiente de demonstração local ou hospedado com MySQL; usar HTTPS quando hospedado. Registrar limitações conhecidas e preparar roteiro com dados fictícios.
 
 ## Configurações previstas
 
@@ -58,14 +58,14 @@ Criar .env.example com placeholders; ignorar .env e credenciais no Git. Tudo com
 
 ## Cronograma de referência
 
-Estimativa de seis semanas para quatro pessoas em dedicação parcial, a ajustar após a primeira entrega. Não representa prazo confirmado.
+As fases abaixo organizam o trabalho durante toda a disciplina. Não são entregas parciais e não fixam semanas: distribuir conforme a data da última aula e a disponibilidade dos quatro integrantes.
 
-| Semana | Objetivo | Saída verificável |
+| Fase interna | Objetivo | Saída verificável |
 |---|---|---|
 | 1 | Requisitos, protótipos e regras | Escopo ratificado, telas e corpus inicial |
 | 2 | Livro e prévia | Fluxo gerar/copiar integrado |
 | 3 | Autenticação e MySQL | Conta, sessão e salvamento |
-| 4 | Histórico e tipos restantes | CRUD privado e quatro famílias |
+| 4 | Histórico, tipos previstos e citações | CRUD privado, quatro famílias e citações integradas |
 | 5 | Testes e revisão normativa | Corpus revisado e testes de segurança |
 | 6 | Usabilidade, deploy e apresentação | Demonstração, documentação e evidências |
 
@@ -76,7 +76,7 @@ Estimativa de seis semanas para quatro pessoas em dedicação parcial, a ajustar
 | A | React, componentes e acessibilidade | Revisar contratos e mensagens da API |
 | B | API, autenticação e segurança | Revisar histórico no frontend |
 | C | Banco, repositories e migrations | Revisar autorização e transações |
-| D | Motor ABNT, corpus e documentação | Revisar dados e formulários |
+| D | Motores de referências/citações, corpus e documentação | Revisar dados e formulários |
 
 Não associar pessoas a frentes sem combinar disponibilidade. Cada mudança deve ter ao menos uma revisão de outra frente. Todos precisam conseguir executar o projeto e explicar o fluxo completo.
 

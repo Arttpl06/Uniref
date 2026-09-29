@@ -90,3 +90,9 @@ Se o backend usar ES Modules, manter arquivos do sequelize-cli em um escopo Comm
 ```
 
 Os dados são fictícios. Campos bibliográficos como ano aproximado precisam de representação explícita; não colocar tudo em um INTEGER year nem usar ano atual como preenchimento automático.
+
+## Citações na entrega final
+
+Não criar tabela de citações neste escopo. Trecho, modalidade, localizador e posição são opções transitórias do gerador. Fontes salvas fornecem autores e data para gerar quantas citações forem necessárias; cada resultado informa sua própria norma e versão de motor, independentemente da norma da referência.
+
+Histórico continua sendo histórico de referências salvas. A interface deve explicar que a citação gerada não é persistida. Um futuro histórico de citações exigiria requisito específico, FK para a fonte e política para preservar a versão de metadados usada; não faz parte desta proposta.

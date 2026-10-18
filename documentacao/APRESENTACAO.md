@@ -10,7 +10,7 @@ Estudantes, professores e pesquisadores gastam tempo organizando referências e 
 
 ## Requisitos principais da entrega final
 
-1. Cadastrar, autenticar e encerrar a sessão do usuário.
+1. Cadastrar, autenticar e encerrar a autenticação do usuário.
 2. Selecionar livro, artigo de periódico, página web ou trabalho acadêmico.
 3. Preencher e validar os campos específicos da fonte.
 4. Gerar uma referência e identificar o perfil normativo utilizado.
@@ -29,6 +29,7 @@ Estudantes, professores e pesquisadores gastam tempo organizando referências e 
 | API | Node.js + Express, em JavaScript |
 | ORM e driver | Sequelize + mysql2 |
 | Banco | MySQL |
+| Autenticação | Firebase Auth (frontend SDK + admin backend) |
 | Testes | Vitest, Testing Library e Supertest |
 
 ## Como funciona
@@ -39,7 +40,7 @@ O usuário seleciona o tipo e preenche os dados. O React envia esses dados para 
 
 Adotaremos um monólito modular: uma API organizada em rotas, controllers, services e repositories. O motor de formatação ficará separado do HTTP e do banco. Essa divisão permite testar regras bibliográficas isoladamente e adicionar novos tipos sem reescrever toda a aplicação.
 
-Sequelize foi escolhido por permitir modelagem e migrações em JavaScript com MySQL. A decisão prioriza a restrição da disciplina e uma estrutura que o grupo consiga explicar e manter.
+Sequelize foi escolhido por permitir modelagem e migrações em JavaScript com MySQL. Firebase Auth foi escolhido para autenticação: elimina hash de senha, sessão no servidor e CSRF, mantendo o MySQL como dono dos dados de domínio.
 
 ## Qualidade e limites
 

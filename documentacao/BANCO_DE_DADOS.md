@@ -6,15 +6,16 @@ Usar MySQL com InnoDB, utf8mb4 e conexão configurada para UTC. Instantes de cri
 
 Separar usuário e referência; manter autores como itens próprios e ordenados, sem catálogo global de autores. Assim, editar “Ana Silva” em uma referência não muda outras. Campos específicos por tipo ficam em JSON validado pelo backend, com schemaVersion. Colunas de busca frequente ficam fora do JSON.
 
+A identidade de acesso é gerenciada pelo Firebase Auth: a tabela users espelha a conta (firebaseUid, e-mail, name) e o id interno CHAR(36) é o vínculo usado pelas demais tabelas. O e-mail e o domínio são validados pelo backend no POST /auth/sync.
+
 ```mermaid
 erDiagram
     USER ||--o{ REFERENCE : possui
     REFERENCE ||--o{ REFERENCE_AUTHOR : ordena
-    USER ||--o{ SESSION : autentica
     USER {
         uuid id PK
+        string firebaseUid UK
         string email UK
-        string passwordHash
     }
     REFERENCE {
         uuid id PK
@@ -30,21 +31,15 @@ erDiagram
         int position
         string kind
     }
-    SESSION {
-        string sid PK
-        uuid userId FK
-        datetime expires
-    }
 ```
 
 ## Dicionário
 
 | Tabela | Campos e restrições |
 |---|---|
-| users | id CHAR(36) PK; name VARCHAR(120) NOT NULL; email VARCHAR(254) UNIQUE NOT NULL, normalizado com trim e lowercase; passwordHash VARCHAR(255) NOT NULL; createdAt/updatedAt DATETIME(3) |
+| users | id CHAR(36) PK; firebaseUid VARCHAR(128) UNIQUE NOT NULL; name VARCHAR(120) NOT NULL; email VARCHAR(254) UNIQUE NOT NULL, normalizado com trim e lowercase; createdAt/updatedAt DATETIME(3) |
 | bibliography_references | id CHAR(36) PK; userId CHAR(36) FK NOT NULL; type VARCHAR(32); title VARCHAR(1000); metadata JSON; authorship VARCHAR(20); plainText TEXT; segments JSON; warnings JSON; standardVersion VARCHAR(30); formatterVersion VARCHAR(30); institutionalProfile VARCHAR(40) NULL; schemaVersion INT; version INT padrão 1; idempotencyKey CHAR(36); requestHash CHAR(64); createdAt/updatedAt DATETIME(3) |
 | reference_authors | id CHAR(36) PK; referenceId CHAR(36) FK NOT NULL; position INT NOT NULL; kind VARCHAR(20); givenNames VARCHAR(200) NULL; familyName VARCHAR(200) NULL; institutionName VARCHAR(500) NULL |
-| sessions | sid VARCHAR(255) PK; userId CHAR(36) FK NULL; expires DATETIME; data TEXT. Adaptar model ao contrato do store de sessões e extrair userId da sessão; não criar outra tabela concorrente |
 
 Campos de referência são obrigatórios salvo indicação contrária. `institutionalProfile = null` significa que só o perfil ABNT está sendo aplicado. Valores de type: book, journalArticle, webPage, academicWork. `authorship`: known ou unknown. Validar enum tanto na aplicação quanto nas migrations com restrições compatíveis.
 
@@ -56,7 +51,6 @@ Campos de referência são obrigatórios salvo indicação contrária. `institut
 - UNIQUE(referenceId, position) preserva posições sem repetição. Exigir posições contíguas no service.
 - Autor pessoal exige givenNames e familyName; institucional exige institutionName; atributos incompatíveis ficam nulos. Autoria desconhecida exige zero autores.
 - FK referência → usuário com ON DELETE CASCADE; FK autor → referência com ON DELETE CASCADE. Exclusão de conta não faz parte da interface inicial, mas deve existir procedimento operacional documentado antes do uso público.
-- FK sessão → usuário com ON DELETE CASCADE quando vinculada; sessões anônimas podem ter userId nulo.
 - Índice (userId, createdAt, id) para histórico; (userId, type, createdAt) para filtro. Busca inicial por título pode usar LIKE parametrizado; avaliar índice textual só com volume real.
 - Listagem ordenada por createdAt DESC e id DESC para desempate. page começa em 1; pageSize padrão 20, máximo 100.
 
@@ -72,7 +66,7 @@ Na repetição de POST, consultar o registro pela chave do usuário antes de ref
 
 Model descreve a tabela para o código; migration registra como criá-la ou alterá-la. Mudança em model não é migration automática. Usar arquivos numerados e versionados, revisar SQL e testar upgrade/rollback em banco de desenvolvimento.
 
-Ordem inicial: users; bibliography_references; reference_authors; sessions e seus índices. Configuração do store não deve executar sync automático em produção. Não usar `sync({ force: true })` ou `sync({ alter: true })` em dados reais.
+Ordem inicial: users; bibliography_references; reference_authors e seus índices. Não usar `sync({ force: true })` ou `sync({ alter: true })` em dados reais.
 
 Se o backend usar ES Modules, manter arquivos do sequelize-cli em um escopo CommonJS explícito (package.json local com type commonjs) ou escolher uma configuração documentada compatível. Evitar misturar require e import no mesmo escopo sem decisão.
 

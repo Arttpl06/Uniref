@@ -12,11 +12,11 @@ Antes de tentar todos os formulários, construir uma fatia funcional: dados de u
 
 Decisões confirmadas: citações fazem parte da entrega final; uso somente para demonstração; apresentação completa na última aula. Padrão Unifor e ampliação de tipos ficam fora do escopo atual. Definir data da aula, dedicação de cada integrante e revisar a delimitação técnica de citações em CITACOES.md.
 
-Instalar Node 24 LTS, Git e MySQL 8.4 no ambiente de desenvolvimento; Docker é opcional. Fixar versões usadas e criar banco de desenvolvimento e banco de teste separados. Usuário da aplicação não deve ser root.
+Instalar Node 24 LTS, Git e MySQL 8.4 no ambiente de desenvolvimento; Docker é opcional. Fixar versões usadas e criar banco de desenvolvimento e banco de teste separados. Usuário da aplicação não deve ser root. Criar projeto no console do Firebase (Auth ativado, provedor e-mail/senha) e baixar a chave da service account para o backend; registrar a configuração web do SDK.
 
 ### Passo 2 — Inicializar aplicações
 
-Criar package.json em backend e instalar Express 5, Sequelize 6, mysql2, Zod 4 e as dependências de sessão/segurança documentadas. Configurar backend como ES Modules e migrations em escopo CommonJS compatível com sequelize-cli 6.
+Criar package.json em backend e instalar Express 5, Sequelize 6, mysql2, Zod 4, firebase-admin e as dependências de segurança documentadas. Configurar backend como ES Modules e migrations em escopo CommonJS compatível com sequelize-cli 6. No frontend, instalar firebase para registro, login e logout diretamente pelo SDK.
 
 Criar o projeto React pelo template JavaScript do Vite em diretório temporário vazio e incorporar em frontend, preservando a organização proposta. Em seguida instalar Router, React Hook Form, resolver de Zod e ferramentas de teste. Não usar template TypeScript por engano se o grupo quiser manter ambos os lados em JS.
 
@@ -32,7 +32,7 @@ Criar formatter puro de livro, validar segmentos/texto e expor POST /preview. Co
 
 ### Passo 5 — Banco, autenticação e histórico
 
-Criar migrations e models; implementar hash, sessão, CSRF, login e logout. Em seguida salvar e listar referências com filtros por userId. Implementar edição com version e exclusão. Testar com dois usuários antes de liberar a tela de histórico.
+Criar migrations e models; implementar autenticação via Firebase Auth (sync e me). Em seguida salvar e listar referências com filtros por userId. Implementar edição com version e exclusão. Testar com dois usuários antes de liberar a tela de histórico.
 
 ### Passo 6 — Tipos previstos, citações e homologação
 
@@ -50,9 +50,10 @@ Revisar acessibilidade e usabilidade, medir metas, testar migrations e restaura�
 | PORT | Porta do backend |
 | DB_HOST, DB_PORT, DB_NAME | Conexão com o banco |
 | DB_USER, DB_PASSWORD | Credencial de menor privilégio |
-| SESSION_SECRET | Segredo longo, aleatório e externo ao código |
-| APP_ORIGIN | Origem permitida para validação de requisições |
+| FIREBASE_SERVICE_ACCOUNT | Credencial JSON do Firebase Admin, externa ao código |
+| ALLOWED_EMAIL_DOMAIN | Domínio de e-mail permitido para cadastro (ex: @unifor.br) |
 | VITE_API_BASE_URL | Caminho público /api/v1, nunca credenciais |
+| VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID | Configuração pública do SDK Firebase no frontend |
 
 Criar .env.example com placeholders; ignorar .env e credenciais no Git. Tudo com prefixo VITE pode chegar ao navegador: não colocar senha de banco nele. Configurar limite de proxy confiável conforme hospedagem, sem aceitar qualquer proxy indiscriminadamente.
 
@@ -64,7 +65,7 @@ As fases abaixo organizam o trabalho durante toda a disciplina. Não são entreg
 |---|---|---|
 | 1 | Requisitos, protótipos e regras | Escopo ratificado, telas e corpus inicial |
 | 2 | Livro e prévia | Fluxo gerar/copiar integrado |
-| 3 | Autenticação e MySQL | Conta, sessão e salvamento |
+| 3 | Autenticação e MySQL | Conta via Firebase Auth e salvamento |
 | 4 | Histórico, tipos previstos e citações | CRUD privado, quatro famílias e citações integradas |
 | 5 | Testes e revisão normativa | Corpus revisado e testes de segurança |
 | 6 | Usabilidade, deploy e apresentação | Demonstração, documentação e evidências |

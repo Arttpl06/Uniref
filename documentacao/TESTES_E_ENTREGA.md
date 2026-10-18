@@ -6,7 +6,7 @@ Testes abaixo são planejados. Nenhum teste de aplicação foi executado nesta e
 
 | Caso | Requisitos | Verificação |
 |---|---|---|
-| T01 Cadastro e login | RF01–02 | Conta válida, duplicidade, senha incorreta, renovação da sessão e logout |
+| T01 Cadastro e login | RF01–02 | Conta válida via Firebase, duplicidade, senha incorreta, renovação do token e logout; e-mail fora do domínio recebe erro e não cria registro no MySQL |
 | T02 Formulários por tipo | RF03–05 | Campos condicionais e validação equivalente na API |
 | T03 Corpus normativo | RF06, RF13, RN01–02 | Comparação exata de saída com exemplos revisados e versão correta |
 | T04 Prévia pública | RF07, RN09 | Gera sem cadastro; não insere referência |
@@ -17,10 +17,11 @@ Testes abaixo são planejados. Nenhum teste de aplicação foi executado nesta e
 | T09 Idempotência | RF09 | Repetição com mesma chave/dados não duplica; outros dados com mesma chave dão 409 |
 | T10 Histórico | RF10, RN08 | Busca, filtro, ordenação e paginação; versão antiga não recalcula |
 | T11 XSS e entradas abusivas | RNF06, RNF09 | Tags são texto; URL inválida rejeitada; body grande e propriedades extras bloqueadas |
-| T12 Sessão/CSRF | RNF06 | Mutação sem token rejeitada; cookie antigo após logout não autentica |
+| T12 Autenticação Bearer | RNF06 | Mutação sem token rejeitada; token inválido ou expirado não autentica |
 | T13 Usabilidade e acesso | RF14, RNF03–05 | Tarefa com 5 participantes, teclado e leitor de tela |
 | T14 Ambiente e banco | RNF10–11 | Migrations em MySQL, backup e restauração em ambiente isolado |
 | T15 Desempenho | RNF02 | Carga e p95 com ambiente e amostra registrados |
+| T22 Restrição de domínio | RF01 | Cadastro com @unifor.br sincroniza; outros domínios recebem 403 no sync e não vira usuário no MySQL |
 
 ## Níveis de teste
 
@@ -30,28 +31,27 @@ Separar fixtures fictícias de dados reais. Não executar limpeza de teste em ba
 
 ## Segurança operacional
 
-- Hash de senha com Argon2id; jamais logar senha, cookie ou conteúdo de sessão. Calibrar custo no ambiente e testar negação de serviço no endpoint de login.
-- Cookie HttpOnly, Secure em HTTPS, SameSite=Lax e escopo mínimo. Sessão com expiração absoluta proposta de 24 horas, sem renovação indefinida; remover sessões expiradas periodicamente.
-- Regenerar sessão ao autenticar e invalidar no logout. Token CSRF sincronizado para mutações e validação de origem.
-- Rate limit proposto: login 5 tentativas por minuto por IP, geração 60/min por IP; ajustar com medição e considerar redes universitárias compartilhadas. Limites em memória servem apenas a uma instância.
+- Firebase Auth gerencia hash de senha, bloqueio de tentativas e recuperação de senha; jamais logar senha ou conteúdo de autenticação.
+- ID token JWT com expiração automática; firebase-admin verifica assinatura e expiração no backend.
+- Rate limit proposto: geração 60/min por IP; ajustar com medição e considerar redes universitárias compartilhadas. Limites em memória servem apenas a uma instância. Login e recuperação de senha contam com bloqueio e limitação nativos do Firebase Auth.
 - Validar todos os corpos, parâmetros e query strings no servidor. Selecionar campos permitidos explicitamente; não passar req.body diretamente a model.update.
-- Consultas parametrizadas/ORM; proprietário vem da sessão; não confiar na ocultação de botões do frontend.
+- Consultas parametrizadas/ORM; proprietário vem do token verificado; não confiar na ocultação de botões do frontend.
 - Logs estruturados com requestId, rota, status e duração, sem corpo bibliográfico ou credenciais por padrão.
 - Usar apenas contas, e-mails e referências fictícios na demonstração. Operação pública não faz parte da entrega.
 
 ## Publicação
 
-A demonstração pode ocorrer localmente ou em hospedagem de demonstração. Se hospedado, o ambiente deve suportar Node, frontend estático, HTTPS e MySQL. Usar mesma origem para simplificar cookies e CSRF. Documentar preparação e restauração dos dados fictícios antes da última aula.
+A demonstração pode ocorrer localmente ou em hospedagem de demonstração. Se hospedado, o ambiente deve suportar Node, frontend estático, HTTPS e MySQL. Usar mesma origem para simplificar o envio do Bearer token. Documentar preparação e restauração dos dados fictícios antes da última aula.
 
 Pipeline planejado: npm ci → lint → testes → build React → migration revisada → deploy → smoke test. Antes de migration destrutiva, fazer backup e planejar compatibilidade da aplicação anterior. Reverter aplicação não reverte automaticamente dados.
 
-Smoke test após deploy: página abre; prévia funciona; login funciona; registro é salvo; logout encerra sessão; usuário diferente não lê o registro. Monitorar erros 5xx e falhas de conexão.
+Smoke test após deploy: página abre; prévia funciona; login funciona; registro é salvo; logout encerra autenticação; usuário diferente não lê o registro. Monitorar erros 5xx e falhas de conexão.
 
 ## Critério de entrega final
 
-Todos os RFs do escopo final ratificado atendidos; corpus dos tipos liberados revisado; testes de isolamento e sessão aprovados; tarefas principais utilizáveis; migrations reproduzíveis; ambiente de demonstração funcional; instruções de execução atualizadas com comandos reais; limitações listadas.
+Todos os RFs do escopo final ratificado atendidos; corpus dos tipos liberados revisado; testes de isolamento e autenticação aprovados; tarefas principais utilizáveis; migrations reproduzíveis; ambiente de demonstração funcional; instruções de execução atualizadas com comandos reais; limitações listadas.
 
-Recuperação de senha por e-mail, operação pública e padrão específico da Unifor estão fora do escopo atual. A apresentação final inclui referências e citações funcionando; as etapas internas não são entregas parciais.
+Operação pública e padrão específico da Unifor estão fora do escopo atual. A apresentação final inclui referências e citações funcionando; as etapas internas não são entregas parciais.
 
 ## Testes de citações
 

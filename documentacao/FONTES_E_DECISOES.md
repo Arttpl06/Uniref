@@ -20,6 +20,7 @@ Os PDFs do acervo não são redistribuídos neste pacote de documentação. Mant
 - Vite: https://vite.dev/guide/ e https://vite.dev/blog/announcing-vite8 — requisitos de ambiente e setup.
 - Node: https://nodejs.org/pt/download — linha LTS considerada na proposta.
 - Zod: https://zod.dev/ — schemas utilizáveis em JavaScript e integração com formulários.
+- Firebase Auth: https://firebase.google.com/docs/auth — autenticação gerenciada; SDK web no frontend e Admin SDK no backend para verificar o ID token.
 
 Recomendações de organização de camadas, divisão de trabalho e metas de desempenho são decisões de engenharia desta proposta, não exigências dos sites consultados.
 
@@ -30,13 +31,14 @@ Recomendações de organização de camadas, divisão de trabalho e metas de des
 | ADR01 | Monólito modular com REST | Um backend e um banco; microserviços não necessários |
 | ADR02 | JavaScript nos dois lados | Atende restrição; TypeScript só se autorizado e desejado |
 | ADR03 | Sequelize 6 com mysql2 | Migrations e models explícitos; Prisma permanece alternativa |
-| ADR04 | Sessão no MySQL com cookie | Logout simples; requer CSRF e store persistente |
+| ADR04 | Firebase Auth com Bearer token | Token JWT verificado no backend; sem sessão no MySQL |
 | ADR05 | Motor determinístico no backend | Resultado centralizado, testável e independente do frontend |
 | ADR06 | Guardar entrada e resultado versionados | Edição possível e histórico estável após correções do motor |
 | ADR07 | Quatro famílias no escopo final | Escopo verificável; ampliação de tipos suspensa |
 | ADR08 | Geração pública, salvamento explícito | Menor barreira de uso; necessidade de rate limit |
 | ADR09 | Campos comuns em colunas, específicos em JSON | Menos tabelas por subtipo; schemas e migrações de payload exigem disciplina |
 | ADR10 | NBR 6023:2025 para referências; NBR 10520:2023 para citações | Padrão específico da Unifor fora do escopo atual |
+| ADR11 | Firebase Auth com restrição de domínio @unifor.br | Cadastro validado no frontend (UX) e no backend em /auth/sync (segurança); Cloud Functions blocking ficaria fora do plano gratuito |
 
 ## Perguntas a resolver na primeira reunião
 

@@ -22,11 +22,11 @@ O escopo de tipos permanece limitado às quatro famílias já documentadas: livr
 
 ## 3. Escopo proposto
 
-**Escopo final:** geração pública sem cadastro; quatro famílias de documentos; validação por tipo; visualização e cópia; cadastro, login e logout; salvamento explícito para usuário autenticado; histórico privado com consulta, edição e exclusão; identificação da versão normativa; geração e cópia de citações diretas e indiretas no sistema autor-data, conforme detalhado em CITACOES.md.
+**Escopo final:** geração pública sem cadastro; quatro famílias de documentos; validação por tipo; visualização e cópia; cadastro, login e logout via Firebase Auth; salvamento explícito para usuário autenticado; histórico privado com consulta, edição e exclusão; identificação da versão normativa; geração e cópia de citações diretas e indiretas no sistema autor-data, conforme detalhado em CITACOES.md.
 
 A geração pública e o botão “Salvar” são decisões propostas, não exigências explícitas do slide. O histórico é uma biblioteca das referências salvas, não um registro de cada clique em Gerar. Isso evita acumular tentativas incompletas e torna a persistência previsível.
 
-**Fora da entrega:** coleções por trabalho, exportação DOCX/PDF/BibTeX, busca de metadados por DOI/ISBN, recuperação de senha por e-mail, login institucional e compartilhamento. O sistema autor-data é a delimitação técnica proposta para citações; ver CITACOES.md. As etapas de desenvolvimento são internas: não há entrega parcial ao professor.
+**Fora da entrega:** coleções por trabalho, exportação DOCX/PDF/BibTeX, busca de metadados por DOI/ISBN, login institucional (SSO) e compartilhamento. O sistema autor-data é a delimitação técnica proposta para citações; ver CITACOES.md. As etapas de desenvolvimento são internas: não há entrega parcial ao professor.
 
 ## 4. Stack recomendada
 
@@ -46,8 +46,8 @@ A geração pública e o botão “Salvar” são decisões propostas, não exig
 | mysql2 | Driver do banco | Faz a conexão usada pelo Sequelize |
 | sequelize-cli 6 | Migrations | Histórico explícito de alterações do schema |
 | MySQL 8.4 | Persistência relacional | Base proposta da linha 8; validar disponibilidade no ambiente de hospedagem |
-| express-session + connect-session-sequelize | Sessão persistida no MySQL | Logout e revogação simples, sem tokens em localStorage |
-| argon2 | Hash de senhas | Usar Argon2id e verificar parâmetros na implementação |
+| firebase (SDK frontend) | Autenticação no cliente | Registro, login e logout direto no Firebase Auth |
+| firebase-admin | Verificação de token no backend | Valida ID token (JWT) e extrai uid/email |
 | helmet e express-rate-limit | Cabeçalhos e limitação de tentativas | Controles básicos do serviço HTTP |
 | Vitest, Testing Library e Supertest | Testes de regras, UI e API | Cobrem os riscos concretos do sistema |
 | ESLint e Prettier | Consistência do código | Facilita revisão entre integrantes |
@@ -64,7 +64,7 @@ ORM é uma biblioteca que mapeia tabelas e registros para operações no código
 | Prisma | Schema declarativo, cliente gerado e ferramentas de migração | Setup e geração do cliente dependem da versão; conferir caminho para JS puro | Alternativa válida se o grupo priorizar sua experiência prévia |
 | SQL com mysql2 | Controle direto das consultas | Mais código de mapeamento e migração | Útil para consultas específicas; não é ORM |
 
-Não há necessidade de NestJS, microserviços, Redis, GraphQL, Redux ou filas neste escopo. Poderiam resolver problemas futuros, mas acrescentariam responsabilidades sem benefício claro agora. Context será usado apenas para o estado de sessão; estado do formulário fica no formulário.
+Não há necessidade de NestJS, microserviços, Redis, GraphQL, Redux ou filas neste escopo. Firebase Auth substitui a autenticação por sessão; o MySQL continua guardando os dados de domínio. Poderiam resolver problemas futuros, mas acrescentariam responsabilidades sem benefício claro agora. Context será usado apenas para o estado de autenticação; estado do formulário fica no formulário.
 
 ## 5. Arquitetura
 
@@ -83,7 +83,7 @@ flowchart TD
 | Camada | Responsabilidade | Exemplo |
 |---|---|---|
 | Route | Associar URL, método e middlewares | POST /api/v1/references |
-| Middleware | Sessão, CSRF, limite e validação transversal | Bloquear salvamento sem login |
+| Middleware | Autenticação Bearer, limite e validação transversal | Bloquear salvamento sem login |
 | Controller | Traduzir HTTP para uma chamada de serviço | Ler body validado e responder 201 |
 | Service | Executar um caso de uso | Gerar e salvar referência do usuário |
 | Formatter | Aplicar regras bibliográficas | Montar referência de livro |
@@ -109,20 +109,20 @@ Observer/event bus não é necessário: React já atualiza a interface a partir 
 | frontend/src/app/ | Router, providers e inicialização |
 | frontend/src/pages/ | GeneratorPage, LoginPage, RegisterPage e HistoryPage |
 | frontend/src/features/references/ | ReferenceForm, AuthorFields, ReferencePreview e campos por tipo |
-| frontend/src/features/auth/ | Formulários e estado de autenticação |
+| frontend/src/features/auth/ | Formulários de cadastro/login e estado de autenticação via Firebase SDK |
 | frontend/src/components/ | Button, Input, Alert e Dialog reutilizáveis |
-| frontend/src/services/ | Cliente fetch com credenciais e erros normalizados |
+| frontend/src/services/ | Cliente fetch com Bearer token e erros normalizados |
 | frontend/src/styles/ | Estilos globais e tokens visuais |
 | backend/src/app.js | Configurar Express sem abrir a porta |
 | backend/src/server.js | Validar ambiente, conectar banco e iniciar servidor |
-| backend/src/modules/auth/ | Routes, controller, service e repository de autenticação |
+| backend/src/modules/auth/ | Routes e controller de autenticação (sync e me) |
 | backend/src/modules/references/ | Routes, controller, service e repository de referências |
 | backend/src/domain/formatters/ | Registry e formatadores de referências por tipo |
 | backend/src/domain/rules/ | Autores, datas, pontuação, títulos e perfis normativos |
-| backend/src/middlewares/ | Autenticação, CSRF, limite e erros |
+| backend/src/middlewares/ | Autenticação, limite e erros |
 | backend/src/database/models/ | Models e associações |
 | backend/src/database/migrations/ | Evolução do schema |
-| backend/src/config/ | Ambiente, sessão e conexão |
+| backend/src/config/ | Ambiente, Firebase e conexão |
 | backend/tests/ | Unitários e integração |
 | shared/schemas/ | Schemas de entrada sem segredos ou dependências de servidor |
 | documentacao/ | Contratos, requisitos e decisões |
@@ -139,8 +139,8 @@ O pacote cria esses diretórios, mas arquivos de implementação ainda precisam 
 6. O service seleciona o perfil normativo e a estratégia de livro.
 7. O motor retorna texto simples, segmentos com destaque, avisos e versões.
 8. React renderiza os segmentos com elementos seguros e habilita a cópia.
-9. Para salvar, o usuário entra na conta. O rascunho permanece apenas em memória durante o fluxo.
-10. POST /references envia os dados originais. O servidor gera novamente o resultado e salva tudo em transação, vinculando ao usuário da sessão.
+9. Para salvar, o usuário entra na conta via Firebase Auth. O rascunho permanece apenas em memória durante o fluxo.
+10. POST /references envia os dados originais. O servidor gera novamente o resultado e salva tudo em transação, vinculando ao usuário autenticado via Bearer token.
 11. O histórico exibe as referências salvas. Edição gera novo resultado e atualiza a versão do registro; exclusão pede confirmação na interface.
 
 A referência enviada pelo navegador nunca é aceita como resultado oficial. Texto e identificação normativa são produzidos pelo servidor. Em falha de salvamento, manter a prévia e mostrar “Não foi possível salvar”; não anunciar sucesso.
@@ -149,7 +149,7 @@ A referência enviada pelo navegador nunca é aceita como resultado oficial. Tex
 
 Telas: gerador público, cadastro, login, histórico e edição. O gerador deve ter seleção de tipo, campos agrupados, autores reordenáveis, ajuda contextual e prévia. No histórico, busca por título, filtro por tipo e paginação de 20 itens.
 
-Estados necessários: inicial, carregando, sucesso, vazio, erro de validação, erro de rede e sessão expirada. Desabilitar envio enquanto uma requisição está em andamento e anunciar sucesso/erro por região acessível. Associar label e erro a cada input; permitir navegação por teclado.
+Estados necessários: inicial, carregando, sucesso, vazio, erro de validação, erro de rede e token expirado. Desabilitar envio enquanto uma requisição está em andamento e anunciar sucesso/erro por região acessível. Associar label e erro a cada input; permitir navegação por teclado.
 
 Não usar o sobrenome deduzido automaticamente a partir do último espaço: nomes compostos e instituições tornam isso incorreto. Pedir nome e sobrenome de entrada separadamente, com ajuda e possibilidade de revisão.
 

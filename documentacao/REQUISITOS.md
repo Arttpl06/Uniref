@@ -6,8 +6,8 @@ Versão 0.2 — revisada com as decisões do grupo em 29/09/2026. Todos os itens
 
 | ID | Requisito verificável | Prioridade / origem | Critério de aceite |
 |---|---|---|---|
-| RF01 | Cadastrar usuário com nome, e-mail e senha | Obrigatório / S | Dados válidos criam conta; e-mail normalizado duplicado retorna conflito; senha não aparece nas respostas |
-| RF02 | Autenticar e encerrar sessão | Obrigatório / S + P | Credenciais válidas permitem login; inválidas dão mensagem genérica; após logout a sessão anterior deixa de autorizar |
+| RF01 | Cadastrar usuário com nome, e-mail institucional e senha | Obrigatório / S | Dados válidos criam conta via Firebase Auth; e-mail @unifor.br duplicado retorna conflito; senha não aparece nas respostas |
+| RF02 | Autenticar e encerrar autenticação | Obrigatório / S + P | Credenciais válidas permitem login via Firebase Auth; inválidas dão mensagem genérica; após logout o token anterior deixa de autorizar |
 | RF03 | Selecionar livro, artigo de periódico, página web ou trabalho acadêmico | Obrigatório / S + P | Cada escolha exibe somente os campos aplicáveis; trabalho acadêmico distingue TCC, dissertação e tese |
 | RF04 | Adicionar, remover e reordenar autores pessoais ou institucionais | Obrigatório / P | Ordem enviada é preservada; autoria desconhecida é opção explícita, sem autor inventado |
 | RF05 | Validar metadados conforme o tipo e a condição online | Obrigatório / P | Campos inválidos são apontados individualmente; envio direto à API também é rejeitado |
@@ -23,7 +23,7 @@ Versão 0.2 — revisada com as decisões do grupo em 29/09/2026. Todos os itens
 | RF15 | Gerar citações diretas e indiretas no texto | Obrigatório / S + G; delimitação técnica P | Sistema autor-data com chamada narrativa e parentética, modalidade direta curta/longa ou indireta, localizador quando disponível e NBR 10520:2023; exemplos homologados e limites em CITACOES.md |
 | RF16 | Organizar referências em coleções e exportar arquivos | Fora do escopo / P | Depende de requisitos de ordenação, estilo e formato de exportação |
 | RF17 | Importar metadados por DOI/ISBN | Fora do escopo / P | Exige fornecedor, limites, proveniência e revisão dos dados importados |
-| RF18 | Recuperar senha por e-mail | Fora do escopo / P | Antes de abertura ao público, definir entrega de e-mails, expiração e uso único de token |
+| RF18 | Recuperar senha por e-mail | Obrigatório / P | Firebase Auth envia e-mail de recuperação; usuário redefine senha e volta a autenticar |
 
 ## Regras de negócio
 
@@ -48,12 +48,12 @@ Metas abaixo são propostas de aceite, não medições realizadas.
 
 | ID | Requisito / meta | Como verificar |
 |---|---|---|
-| RNF01 | Backend JavaScript, frontend React e banco MySQL | Revisar código, dependências e configuração |
+| RNF01 | Backend JavaScript, frontend React, banco MySQL e Firebase Auth | Revisar código, dependências e configuração |
 | RNF02 | API responde à prévia com p95 ≤ 500 ms, sem incluir rede do usuário, com 20 usuários simultâneos | Executar carga de 5 minutos em ambiente identificado, registrar CPU/RAM e resultados |
 | RNF03 | Pelo menos 4 de 5 participantes geram e copiam um livro em até 2 minutos, com metadados previamente disponíveis | Teste moderado, sem ajuda durante a tarefa, medindo do gerador aberto até a cópia |
 | RNF04 | Fluxos completos em telas de 360 px e desktop de 1280 px sem rolagem horizontal indevida | Revisão manual dos fluxos e tamanhos |
 | RNF05 | Formulários utilizáveis por teclado, com labels, foco visível, mensagens associadas e contraste adequado | Checklist de acessibilidade e teste manual com leitor de tela; alvo WCAG AA a validar |
-| RNF06 | Senhas protegidas por hash; sessão segura; acesso por proprietário | Testes de autenticação, CSRF e acesso cruzado |
+| RNF06 | Token Firebase válido; acesso por proprietário | Testes de autenticação, Bearer token e acesso cruzado |
 | RNF07 | Dados e saída são consistentes mesmo quando a gravação falha | Simular falha durante transação e verificar rollback |
 | RNF08 | Regras bibliográficas têm testes unitários e conjunto de exemplos aprovados | Executar corpus homologado em todo pull request |
 | RNF09 | Configuração sensível fora do repositório e erros sem stack trace para usuário | Inspecionar build, logs, .gitignore e respostas |
@@ -65,7 +65,7 @@ Metas abaixo são propostas de aceite, não medições realizadas.
 
 **UC01 — Gerar e copiar (RF03–RF08, RF13–RF14).** Ator: visitante ou usuário. Pré-condição: conhecer os dados da fonte. Fluxo: selecionar tipo, preencher, validar, gerar, revisar e copiar. Alternativas: erro de campo mantém entrada; falha de rede permite tentar novamente; clipboard indisponível permite selecionar texto. Pós-condição: referência disponível na tela, sem persistência automática.
 
-**UC02 — Salvar (RF01–RF02, RF09).** Ator: usuário autenticado. Pré-condição: dados válidos e sessão ativa. Fluxo: clicar Salvar, API validar e gerar novamente, gravar em transação e confirmar. Se a sessão expirou, pedir login mantendo rascunho em memória. Se a resposta se perder, a chave de idempotência permite repetição sem duplicar.
+**UC02 — Salvar (RF01–RF02, RF09).** Ator: usuário autenticado. Pré-condição: dados válidos e token ativo. Fluxo: clicar Salvar, API validar e gerar novamente, gravar em transação e confirmar. Se o token expirou, pedir login mantendo rascunho em memória. Se a resposta se perder, a chave de idempotência permite repetição sem duplicar.
 
 **UC03 — Gerenciar histórico (RF10–RF12).** Ator: usuário autenticado. Fluxo: listar, buscar, abrir, editar ou excluir. Alternativas: referência alheia/inexistente retorna 404; edição concorrente retorna 409 e exige recarregar. Pós-condição: somente dados do próprio usuário são alterados.
 

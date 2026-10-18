@@ -23,6 +23,6 @@ A entrega final reúne o gerador de referências e o gerador de citações para 
 
 ## Decisão central
 
-React + Vite no frontend; Node.js + Express em JavaScript no backend; Sequelize + mysql2 para persistência no MySQL. Monólito modular com API REST e motor determinístico de referências. Nenhuma IA é necessária para gerar as referências.
+React + Vite no frontend; Node.js + Express em JavaScript no backend; Sequelize + mysql2 para persistência no MySQL; Firebase Auth para autenticação restrita ao e-mail institucional @unifor.br. Monólito modular com API REST e motor determinístico de referências. Nenhuma IA é necessária para gerar as referências.
 
 As pastas backend, frontend e shared são espaços reservados para implementação. Leia seus README antes de começar. Não execute `npm start`: ainda não existem scripts ou aplicação.

@@ -1,15 +1,15 @@
 import Button from "../components/Button";
 import Input from "../components/Input";
 import React from "react";
-import styles from "../modules/pageCadastro.module.css"
-import logoUniforBranca from "../images/logoUniforBranca.png"
-import simbolo1 from "../images/simboloUnifor1.png"
-import simbolo2 from "../images/simboloUnifor2.png"
-import simbolo3 from "../images/simboloUnifor3.png"
-import simbolo4 from "../images/simboloUnifor4.png"
-import simbolo5 from "../images/simboloUnifor5.png"
+import styles from "./RegisterPage.module.css"
+import logoUniforBranca from "../assets/logoUniforBranca.png"
+import simbolo1 from "../assets/simboloUnifor1.png"
+import simbolo2 from "../assets/simboloUnifor2.png"
+import simbolo3 from "../assets/simboloUnifor3.png"
+import simbolo4 from "../assets/simboloUnifor4.png"
+import simbolo5 from "../assets/simboloUnifor5.png"
 
-export default function PageCadastro() {
+export default function RegisterPage() {
     return(
         <div className={styles.fundo}>
             <div>

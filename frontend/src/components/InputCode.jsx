@@ -1,4 +1,4 @@
-import styles from "../modules/inputCode.module.css"
+import styles from "./InputCode.module.css"
 
 export default function InputCode() {
     return(

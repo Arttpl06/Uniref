@@ -1,0 +1,35 @@
+.fundo {
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    background-color: #044CF4;
+    height: 100vh;
+    width: 100%;
+}
+
+.logoUnifor {
+    height: 24vh;
+    width: 22vh;
+    margin-bottom: 2vh;
+}
+
+.simbolos {
+    display: flex;
+    flex-direction: row;
+    height: 8vh;
+    width: 8vh;
+    margin-top: 14vh;
+    margin-bottom: 10vh;
+    margin-left: 25vh;
+    margin-right: 2vh;
+}
+
+.titulo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 25vh;
+    margin-right: 2vh;
+}

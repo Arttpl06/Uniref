@@ -25,7 +25,7 @@ export default function PasswordNewPage(){
                 <h5 className="text-start">Repita a Senha:</h5>
                 <Input tipo='password'/><br></br>
                 <Button label='Confirmar Senha'></Button>
-                <Button label='Voltar'></Button>
+                <Button label='Voltar' to='/'></Button>
             </div>
             <div>
                 <img src={simbolo2} alt="simbolo2" className={Styles.simbolos}/>

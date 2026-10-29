@@ -23,7 +23,7 @@ export default function PasswordRecoveryPage(){
                 <h5 className="text-start">Email:</h5>
                 <Input tipo='email'/><br></br>
                 <Button label='Acessar'></Button>
-                <Button label='Voltar'></Button>
+                <Button label='Voltar' to='/'></Button>
             </div>
             <div>
                 <img src={simbolo2} alt="simbolo2" className={Styles.simbolos}/>

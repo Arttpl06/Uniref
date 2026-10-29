@@ -1,6 +1,7 @@
 import Button from "../components/Button";
 import Input from "../components/Input";
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "./RegisterPage.module.css"
 import Styles from "./fundoLogins.module.css"
 import logoUniforBranca from "../assets/logoUniforBranca.png"
@@ -27,10 +28,10 @@ export default function RegisterPage() {
                 <Input tipo='password'/><br></br>
                 <h5 className="text-start">Repita a Senha:</h5>
                 <Input tipo='password'/><br></br>
-                <a href="#" className="me-5 pe-4">Esqueci a Senha</a>
-                <a href="#" className="ms-5">Cadastrar</a><br></br>
+                <Link to="/PasswordRecoveryPage" className="me-5 pe-4">Esqueci a Senha</Link>
+                <Link to="/" className="ms-5">Entrar</Link><br></br>
                 <Button label='Cadastrar'></Button>
-                <Button label='Voltar'></Button>
+                <Button label='Voltar' to='/'></Button>
             </div>
             <div>
                 <img src={simbolo2} alt="simbolo2" className={Styles.simbolos}/>

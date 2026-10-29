@@ -24,8 +24,8 @@ export default function PasswordVerificationPage(){
                 <h5 className="text-start mb-3">Digite o Código:</h5>
                 <InputCode/><br></br>
                 <a href="#">Reenviar Código</a>
-                <Button label='Confimar Código'></Button>
-                <Button label='Voltar'></Button>
+                <Button label='Confirmar Código'></Button>
+                <Button label='Voltar' to='/'></Button>
             </div>
             <div>
                 <img src={simbolo2} alt="simbolo2" className={Styles.simbolos}/>

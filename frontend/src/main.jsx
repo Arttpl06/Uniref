@@ -13,6 +13,7 @@ createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
+          <Route path="/" element={<LoginPage />} />
           <Route path="/RegisterPage" element={<RegisterPage/>}/> 
           <Route path="/LoginPage" element={<LoginPage />}></Route>
           <Route path="/PasswordNewPage" element={<PasswordNewPage />}></Route>

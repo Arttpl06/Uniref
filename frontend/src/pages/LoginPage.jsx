@@ -1,5 +1,6 @@
 import Input from "../components/Input";
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "./LoginPage.module.css"
 import Styles from "./fundoLogins.module.css"
 import logoUniforBranca from "../assets/logoUniforBranca.png"
@@ -24,8 +25,8 @@ export default function LoginPage(){
                 <Input tipo='email'/><br></br>
                 <h5 className="text-start">Senha:</h5>
                 <Input tipo='password'/><br></br>
-                <a href="#" className="me-5 pe-4">Esqueci a Senha</a>
-                <a href="#" className="ms-5">Cadastrar</a><br></br>
+                <Link to="/PasswordRecoveryPage" className="me-5 pe-4">Esqueci a Senha</Link>
+                <Link to="/RegisterPage" className="ms-5">Cadastrar</Link><br></br>
                 <button className="btn btn-primary mt-4 w-100">Acessar</button>
             </div>
             <div>

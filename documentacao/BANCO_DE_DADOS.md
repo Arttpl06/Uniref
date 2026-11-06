@@ -78,7 +78,7 @@ Se o backend usar ES Modules, manter arquivos do sequelize-cli em um escopo Comm
   "edition": "2",
   "publicationPlace": "Fortaleza",
   "publisher": "Editora Exemplo",
-  "publicationDate": { "literal": "2025", "kind": "exact" },
+  "publicationYear": "2025",
   "online": false
 }
 ```

@@ -16,6 +16,16 @@ Base de trabalho: NBR 6023:2025 fornecida no ZIP. Citações são uma funcionali
 6. Aplicar pontuação entre elementos presentes, sem produzir separadores vazios.
 7. Derivar texto simples dos segmentos e devolver avisos explícitos.
 
+### Campos vazios
+
+O formulário pode criar campos extras sob demanda (por exemplo, ao aumentar a quantidade de autores). A regra de validação é:
+
+- **Campo opcional, visível e vazio** → não é erro. É normalizado para `null` (texto, URL, data de acesso, nota). Exemplo: subtítulo em branco, nota em branco etc.
+- **Campo essencial vazio** → erro do schema (`min(1)`). Exemplo: título, ano de publicação, local e editora.
+- **Campo vazio que contradiz outro valor** → erro do schema (`superRefine`). Exemplo: o usuário pediu 2 autores, o segundo campo apareceu e ficou em branco; ou `online = true` sem URL e data de acesso.
+
+Cada item de lista dinâmica é obrigatório por inteiro: um autor enviado precisa de nome e sobrenome; uma responsabilidade enviada precisa de `statement`. Não se envia item em branco.
+
 Um mapa de estratégias basta:
 
 ```js
@@ -43,7 +53,9 @@ Funções compartilhadas: formatAuthors, formatPublicationDate, formatAccessDate
 | Página web | Responsabilidade quando identificada, título, identificação do site/fonte e data disponível | URL e acesso; local/editor quando pertinentes; ausência de autoria ou data segue regra específica homologada |
 | Trabalho acadêmico | Autoria, título, ano de depósito, natureza (TCC/dissertação/tese), grau/curso, instituição, local e data de defesa/apresentação | Subtítulo, descrição física e dados complementares conforme perfil; online exige URL e acesso |
 
-Datas de publicação devem permitir representação fiel ao documento. Proposta de modelo: `{literal, kind}`, com kind exact, approximate ou unknown. O desenvolvimento inicial pode aceitar apenas exact e bloquear os demais com explicação até homologação. Não transformar `unknown` em data inventada nem assumir automaticamente “s.d.”.
+Local e editora são exigidos no livro (8.4 e 8.5). Quando não identificados, o valor obrigatório é a forma normativa: `[S. l.]` (sine loco) e `[s. n.]` (sine nomine). Se ambos faltarem, a norma pede a forma combinada `[S. l.: s. n.]` (8.5.6); o motor deve reconhecer esse par e imprimir conforme a norma.
+
+Datas de publicação devem permitir representação fiel ao documento. Em livro, o ano é o único elemento (8.6.1) e é registrado como texto livre (`publicationYear`), aceitando as formas previstas em 8.6.1.3: `[1969?]`, `[197-]`, `[18--?]`, `[ca. 1960]`, `[entre 1906 e 1912]`, entre outras. O motor imprime o valor como veio, sem reinterpretar. Não usar `unknown`: quando o ano não é localizado, a norma exige um ano entre colchetes. Artigo de periódico pode acrescentar mês (8.6.2) e dia/hora (8.6.3) em campo próprio, sem reutilizar o campo de livro.
 
 A interface deve mostrar os limites reais de cobertura. “Página web” é uma família simplificada: legislação, vídeo e artigo em uma URL não passam automaticamente a ser página web. Oferecer ajuda para escolher o tipo correto.
 

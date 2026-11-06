@@ -33,7 +33,7 @@ Firebase Auth no frontend retorna um ID token (JWT) após login. O frontend envi
     "edition": "2",
     "publicationPlace": "Fortaleza",
     "publisher": "Editora Exemplo",
-    "publicationDate": { "literal": "2025", "kind": "exact" },
+    "publicationYear": "2025",
     "online": false
   }
 }

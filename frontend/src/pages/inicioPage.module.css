@@ -1,0 +1,174 @@
+.conteudo {
+  padding: 30px 40px;
+}
+
+.conteudo h1 {
+  font-size: 20px;
+  font-weight: bold;
+
+  color: #111;
+
+  margin: 0;
+  margin-bottom: 0;
+}
+
+.areaMenus {
+  display: flex;
+  align-items: flex-start;
+
+  position: relative;
+}
+
+.menuPrincipal {
+  width: 64vh;
+  height: 41.7vh;
+
+  background-color: #0848F5;
+
+  border-radius: 14px;
+
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.itemMenu {
+  width: 100%;
+  height: 32px;
+
+  padding: 24px 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border: none;
+  background-color: transparent;
+
+  color: white;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.itemMenu:hover {
+  background-color: #2867ff;
+}
+
+.selecionado {
+  background-color: #80B1FF;
+  color: #111;
+  border-radius: 10px;
+}
+
+.setaMenu {
+  font-size: 40px;
+  font-weight: normal;
+  line-height: 3;
+}
+
+.submenu {
+  width: 40vh;
+  min-height: 40vh;
+
+  background-color: #0848F5;
+
+  border-radius: 11px;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.itemSubmenu {
+  width: 100%;
+  min-height: 32px;
+
+  padding: 14px 10px;
+
+  border: none;
+  background-color: transparent;
+
+  color: white;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  text-align: center;
+
+  cursor: pointer;
+}
+
+.itemSubmenu:hover {
+  background-color: #2867ff;
+}
+
+@media (max-width: 850px) {
+
+  .cabecalho {
+    gap: 15px;
+  }
+
+  .navegacao {
+    gap: 14px;
+  }
+
+  .pesquisa {
+    width: 190px;
+  }
+
+}
+
+@media (max-width: 650px) {
+
+  .cabecalho {
+    height: auto;
+    min-height: 65px;
+
+    flex-wrap: wrap;
+    gap: 12px;
+
+    padding: 10px;
+  }
+
+  .navegacao {
+    gap: 12px;
+  }
+
+  .navegacao a {
+    font-size: 12px;
+  }
+
+  .pesquisa {
+    order: 3;
+    width: 100%;
+    margin: 0;
+  }
+
+  .perfilContainer {
+    margin-left: auto;
+  }
+
+  .conteudo {
+    padding: 15px 10px;
+  }
+
+  .areaMenus {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .menuPrincipal,
+  .submenu {
+    width: 100%;
+  }
+
+  .submenu {
+    min-height: auto;
+  }
+
+}

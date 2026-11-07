@@ -1,0 +1,217 @@
+.pagina {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.pagina * {
+  box-sizing: border-box;
+}
+
+.cabecalho {
+  width: 100%;
+  height: 65px;
+
+  background-color: #0848F5;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 15px;
+  gap: 25px;
+
+  position: relative;
+  z-index: 10;
+}
+
+.logo {
+  width: 40px;
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.logo{
+    height: 50px;
+    width: 45px;
+}
+
+.navegacao {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+
+  height: 100%;
+  white-space: nowrap;
+}
+
+.navegacao a {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+
+  color: white;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: bold;
+
+  position: relative;
+}
+
+.navegacao a:hover {
+  opacity: 0.8;
+}
+
+.ativo::after {
+  content: "";
+
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+
+  background-color: white;
+}
+
+.pesquisa {
+  margin-left: auto;
+
+  width: 275px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pesquisa input {
+  width: 100%;
+
+  border: none;
+  border-bottom: 1px solid #A8C0FF;
+
+  background: transparent;
+
+  padding: 8px 0;
+
+  color: white;
+  font-size: 14px;
+
+  outline: none;
+}
+
+.pesquisa input::placeholder {
+  color: #A8C0FF;
+}
+
+.pesquisa button {
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pesquisa svg {
+  width: 23px;
+  height: 23px;
+
+  fill: none;
+  stroke: white;
+  stroke-width: 2;
+}
+
+.perfilContainer {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.perfilBotao {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+
+  background-color: white;
+  border-radius: 50%;
+}
+
+.setaPerfil {
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.menuPerfil {
+  position: absolute;
+
+  top: 49px;
+  right: -10px;
+
+  width: 186px;
+
+  background-color: white;
+  border: 1px solid #c8c8c8;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.usuario {
+  padding: 9px 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  border-bottom: 1px solid #c8c8c8;
+
+  font-size: 12px;
+}
+
+.usuario strong {
+  font-size: 14px;
+}
+
+.menuPerfil button {
+  width: 100%;
+
+  padding: 11px 10px;
+
+  background-color: white;
+  border: none;
+
+  text-align: left;
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.menuPerfil button:hover {
+  background-color: #eee;
+}
+
+.areaSair {
+  border-top: 1px solid #c8c8c8;
+}
+

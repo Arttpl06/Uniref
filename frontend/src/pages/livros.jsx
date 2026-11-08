@@ -28,7 +28,8 @@ export default function Livros() {
       outroSuporteFisico: "",
       URL: "",
       Subordinação: "",
-      tipoResponsa: ""
+      tipoResponsa: "",
+      dataAcesso: ""
   });
 
   const handleChange = (e) => {
@@ -485,13 +486,25 @@ export default function Livros() {
               </div>
 
             <div className={styles.campo}>
-                  <label className={styles.labelClaro}>Outro tipo de responsabilidade</label>
+                  <label className={styles.labelEscuro}>Outro tipo de responsabilidade</label>
                   <input
-                      className={styles.inputClaro}
+                      className={styles.inputEscuro}
                       type="text"
                       name="tipoResponsa"
                       placeholder="Ex: Tradução de Heitor Aquino Ferreira"
                       value={formulario.tipoResponsa}
+                      onChange={handleChange}
+                  />
+              </div>
+
+
+            <div className={styles.campo}>
+                  <label className={styles.labelClaro}>data do acesso a fonte bibliografica</label>
+                  <input
+                      className={styles.inputClaro}
+                      type="date"
+                      name="dataAcesso"
+                      value={formulario.dataAcesso}
                       onChange={handleChange}
                   />
               </div>

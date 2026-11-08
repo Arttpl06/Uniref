@@ -19,7 +19,7 @@ function validBook(overrides = {}) {
     authorship: "known",
     authors: [{ kind: "person", givenNames: "Ana", familyName: "Silva" }],
     title: "Introdução à pesquisa",
-    metadata: bookMetadata(),
+    ...bookMetadata(),
     ...overrides,
   };
 }
@@ -28,59 +28,55 @@ test("aceita livro mínimo válido e aplica defaults", () => {
   const result = bookDocumentSchema.safeParse(validBook());
 
   assert.equal(result.success, true);
-  assert.equal(result.data.metadata.online, false);
-  assert.equal(result.data.metadata.url, null);
-  assert.equal(result.data.metadata.subtitle, null);
+  assert.equal(result.data.online, false);
+  assert.equal(result.data.url, null);
+  assert.equal(result.data.subtitle, null);
 });
 
 test("aceita campos opcionais vazios e normaliza para null", () => {
   const result = bookDocumentSchema.safeParse(
     validBook({
-      metadata: bookMetadata({
-        subtitle: "",
-        edition: "   ",
-        url: "",
-        accessDate: "",
-      }),
+      subtitle: "",
+      edition: "   ",
+      url: "",
+      accessDate: "",
     })
   );
 
   assert.equal(result.success, true);
-  assert.equal(result.data.metadata.subtitle, null);
-  assert.equal(result.data.metadata.edition, null);
-  assert.equal(result.data.metadata.url, null);
-  assert.equal(result.data.metadata.accessDate, null);
+  assert.equal(result.data.subtitle, null);
+  assert.equal(result.data.edition, null);
+  assert.equal(result.data.url, null);
+  assert.equal(result.data.accessDate, null);
 });
 
 test("exige local de publicação", () => {
-  const metadata = bookMetadata();
-  delete metadata.publicationPlace;
-
-  const result = bookDocumentSchema.safeParse(validBook({ metadata }));
+  const result = bookDocumentSchema.safeParse(
+    validBook({ publicationPlace: undefined })
+  );
 
   assert.equal(result.success, false);
 });
 
 test("rejeita local de publicação em branco", () => {
   const result = bookDocumentSchema.safeParse(
-    validBook({ metadata: bookMetadata({ publicationPlace: "   " }) })
+    validBook({ publicationPlace: "   " })
   );
 
   assert.equal(result.success, false);
 });
 
 test("exige editora", () => {
-  const metadata = bookMetadata();
-  delete metadata.publisher;
-
-  const result = bookDocumentSchema.safeParse(validBook({ metadata }));
+  const result = bookDocumentSchema.safeParse(
+    validBook({ publisher: undefined })
+  );
 
   assert.equal(result.success, false);
 });
 
 test("rejeita editora em branco", () => {
   const result = bookDocumentSchema.safeParse(
-    validBook({ metadata: bookMetadata({ publisher: "" }) })
+    validBook({ publisher: "" })
   );
 
   assert.equal(result.success, false);
@@ -89,10 +85,8 @@ test("rejeita editora em branco", () => {
 test("aceita [S. l.] e [s. n.] quando local e editora não são identificados", () => {
   const result = bookDocumentSchema.safeParse(
     validBook({
-      metadata: bookMetadata({
-        publicationPlace: "[S. l.]",
-        publisher: "[s. n.]",
-      }),
+      publicationPlace: "[S. l.]",
+      publisher: "[s. n.]",
     })
   );
 
@@ -121,11 +115,9 @@ test("rejeita autor extra em branco quando o usuário pediu mais autores", () =>
 test("rejeita online = true com URL e data de acesso em branco", () => {
   const result = bookDocumentSchema.safeParse(
     validBook({
-      metadata: bookMetadata({
-        online: true,
-        url: "",
-        accessDate: "",
-      }),
+      online: true,
+      url: "",
+      accessDate: "",
     })
   );
 
@@ -149,10 +141,8 @@ test("rejeita campo extra (userId)", () => {
 test("rejeita online = true sem URL", () => {
   const result = bookDocumentSchema.safeParse(
     validBook({
-      metadata: bookMetadata({
-        online: true,
-        accessDate: "2026-11-05",
-      }),
+      online: true,
+      accessDate: "2026-11-05",
     })
   );
 
@@ -177,39 +167,33 @@ test("rejeita autor pessoal sem sobrenome", () => {
   assert.equal(result.success, false);
 });
 
-test("aceita outras responsabilidades e nota, preservando a ordem", () => {
+test("aceita outra responsabilidade e nota", () => {
   const result = bookDocumentSchema.safeParse(
     validBook({
-      otherResponsibilities: [
-        { statement: "Tradução Vera da Costa e Silva" },
-        { statement: "Ilustrações de Paulo Lyra" },
-      ],
+      otherResponsibility: "Tradução Vera da Costa e Silva",
       notes: "Título original: Thinking Sociologically. Inclui bibliografia.",
     })
   );
 
   assert.equal(result.success, true);
-  assert.deepEqual(
-    result.data.otherResponsibilities.map((item) => item.statement),
-    ["Tradução Vera da Costa e Silva", "Ilustrações de Paulo Lyra"]
-  );
+  assert.equal(result.data.otherResponsibility, "Tradução Vera da Costa e Silva");
   assert.equal(
     result.data.notes,
     "Título original: Thinking Sociologically. Inclui bibliografia."
   );
 });
 
-test("aplica [] a responsabilidades e null a nota quando omitidas", () => {
+test("aplica null a responsabilidade e nota quando omitidas", () => {
   const result = bookDocumentSchema.safeParse(validBook());
 
   assert.equal(result.success, true);
-  assert.deepEqual(result.data.otherResponsibilities, []);
+  assert.equal(result.data.otherResponsibility, null);
   assert.equal(result.data.notes, null);
 });
 
-test("rejeita responsabilidade com texto vazio", () => {
+test("rejeita responsabilidade acima do limite", () => {
   const result = bookDocumentSchema.safeParse(
-    validBook({ otherResponsibilities: [{ statement: "   " }] })
+    validBook({ otherResponsibility: "a".repeat(LIMITS.statement + 1) })
   );
 
   assert.equal(result.success, false);
@@ -230,13 +214,28 @@ test("rejeita nota acima do limite", () => {
   assert.equal(result.success, false);
 });
 
+test("aceita série", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({ series: "Vaga-lume, v. 12" })
+  );
+
+  assert.equal(result.success, true);
+  assert.equal(result.data.series, "Vaga-lume, v. 12");
+});
+
+test("rejeita série acima do limite", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({ series: "a".repeat(LIMITS.series + 1) })
+  );
+
+  assert.equal(result.success, false);
+});
+
 function onlineBook(accessDate) {
   return validBook({
-    metadata: bookMetadata({
-      online: true,
-      url: "https://example.com/livro",
-      accessDate,
-    }),
+    online: true,
+    url: "https://example.com/livro",
+    accessDate,
   });
 }
 
@@ -281,7 +280,7 @@ test("aceita ano de publicação como texto livre", () => {
     "[entre 1906 e 1912]",
   ]) {
     const result = bookDocumentSchema.safeParse(
-      validBook({ metadata: bookMetadata({ publicationYear: year }) })
+      validBook({ publicationYear: year })
     );
 
     assert.equal(result.success, true, `deveria aceitar ${year}`);
@@ -290,7 +289,7 @@ test("aceita ano de publicação como texto livre", () => {
 
 test("rejeita ano de publicação vazio", () => {
   const result = bookDocumentSchema.safeParse(
-    validBook({ metadata: bookMetadata({ publicationYear: "   " }) })
+    validBook({ publicationYear: "   " })
   );
 
   assert.equal(result.success, false);
@@ -299,12 +298,156 @@ test("rejeita ano de publicação vazio", () => {
 test("rejeita o formato antigo de data (objeto com kind)", () => {
   const result = bookDocumentSchema.safeParse(
     validBook({
-      metadata: {
-        ...bookMetadata(),
-        publicationDate: { literal: "2025", kind: "exact" },
+      publicationYear: "2025",
+      publicationDate: { literal: "2025", kind: "exact" },
+    })
+  );
+
+  assert.equal(result.success, false);
+});
+
+test("aceita descrição física com páginas", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      pageNumbering: { type: "páginas", value: "326" },
+    })
+  );
+
+  assert.equal(result.success, true);
+  assert.deepEqual(result.data.pageNumbering, {
+    type: "páginas",
+    value: "326",
+  });
+});
+
+test("aceita descrição física com volumes", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      pageNumbering: { type: "volumes", value: "3" },
+    })
+  );
+
+  assert.equal(result.success, true);
+  assert.deepEqual(result.data.pageNumbering, {
+    type: "volumes",
+    value: "3",
+  });
+});
+
+test("aceita descrição física com folhas", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      pageNumbering: { type: "folhas", value: "157" },
+    })
+  );
+
+  assert.equal(result.success, true);
+  assert.deepEqual(result.data.pageNumbering, {
+    type: "folhas",
+    value: "157",
+  });
+});
+
+test("rejeita descrição física com valor vazio", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      pageNumbering: { type: "páginas", value: "   " },
+    })
+  );
+
+  assert.equal(result.success, false);
+});
+
+test("aceita numeração omitida (null)", () => {
+  const result = bookDocumentSchema.safeParse(validBook());
+
+  assert.equal(result.success, true);
+  assert.equal(result.data.pageNumbering, null);
+});
+
+test("aceita descrição física do suporte com CD-ROM", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      physicalSupportDescription: {
+        medium: "cdrom",
+        quantity: "5",
+      },
+    })
+  );
+
+  assert.equal(result.success, true);
+  assert.deepEqual(result.data.physicalSupportDescription, {
+    medium: "cdrom",
+    otherMedium: null,
+    quantity: "5",
+  });
+});
+
+test("aceita descrição física do suporte com Outro e texto livre", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      physicalSupportDescription: {
+        medium: "other",
+        otherMedium: "Pen drive USB 3.0",
+        quantity: "2",
+      },
+    })
+  );
+
+  assert.equal(result.success, true);
+  assert.deepEqual(result.data.physicalSupportDescription, {
+    medium: "other",
+    otherMedium: "Pen drive USB 3.0",
+    quantity: "2",
+  });
+});
+
+test("aceita descrição física do suporte como Nenhum sem quantidade", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      physicalSupportDescription: {
+        medium: "nenhum",
+      },
+    })
+  );
+
+  assert.equal(result.success, true);
+  assert.deepEqual(result.data.physicalSupportDescription, {
+    medium: "nenhum",
+    otherMedium: null,
+    quantity: null,
+  });
+});
+
+test("rejeita descrição física do suporte com CD-ROM sem quantidade", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      physicalSupportDescription: {
+        medium: "cdrom",
+        quantity: "",
       },
     })
   );
 
   assert.equal(result.success, false);
+});
+
+test("rejeita descrição física do suporte com Outro sem texto livre", () => {
+  const result = bookDocumentSchema.safeParse(
+    validBook({
+      physicalSupportDescription: {
+        medium: "other",
+        quantity: "2",
+      },
+    })
+  );
+
+  assert.equal(result.success, false);
+});
+
+test("aceita descrição física do suporte omitida (null)", () => {
+  const result = bookDocumentSchema.safeParse(validBook());
+
+  assert.equal(result.success, true);
+  assert.equal(result.data.physicalSupportDescription, null);
 });

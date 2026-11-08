@@ -1,0 +1,244 @@
+
+/* =====================================
+   CONTAINER PRINCIPAL
+===================================== */
+
+.containerReferencias {
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tituloFormulario {
+    font-size: 18px;
+    margin: 0 0 4px;
+    font-weight: bold;
+    color: #222;
+}
+
+
+/* =====================================
+   FORMULÁRIO
+===================================== */
+
+.formReferencias {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    max-width: 200vh;
+    width: 100%;
+}
+
+
+/* =====================================
+   COLUNAS
+===================================== */
+
+.coluna {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+/* =====================================
+   ESTRUTURA DOS CAMPOS
+===================================== */
+
+.campo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 35px;
+    width: 100%;
+}
+
+
+/* =====================================
+   LABELS
+===================================== */
+
+/* LABEL CLARO */
+
+.labelClaro {
+    background-color: #ffffff;
+    border: 1px solid #bdbdbd;
+}
+
+/* LABEL ESCURO */
+
+.labelEscuro {
+    background-color: #eaeaea;
+    border: 1px solid #bdbdbd;
+}
+
+/* ESTILO GERAL DOS LABELS */
+
+.campo label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8px;
+    font-size: 16px;
+    color: #222;
+    box-sizing: border-box;
+}
+
+
+/* =====================================
+   INPUTS E SELECTS
+===================================== */
+
+/* CAMPO CLARO */
+
+.inputClaro {
+    background-color: #ffffff;
+    border: 1px solid #bdbdbd;
+}
+
+/* CAMPO ESCURO */
+
+.inputEscuro {
+    background-color: #eaeaea;
+    border: 1px solid #bdbdbd;
+}
+
+/* ESTILO GERAL DOS CAMPOS */
+
+.campo input,
+.campo select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 8px;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    color: #555;
+    font-family: Arial, sans-serif;
+}
+
+.campo select:disabled,
+.campo input:disabled {
+    background-color: #d6d6d6;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* PLACEHOLDER */
+
+.campo input::placeholder {
+    color: #999;
+}
+
+/* EFEITO AO CLICAR */
+
+.campo input:focus,
+.campo select:focus {
+    border-color: #084cf5;
+}
+
+
+/* =====================================
+   CAMPO DUPLO
+   (Quantidade de páginas)
+===================================== */
+
+.campoDuplo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-width: 0;
+    width: 100%;
+}
+
+.campoDuplo input,
+.campoDuplo select {
+    min-width: 0;
+}
+
+
+/* =====================================
+   BOTÃO GERAR REFERÊNCIAS
+===================================== */
+
+.btnGerar {
+    background-color: #084cf5;
+    color: #ffffff;
+    border: none;
+    border-radius: 11px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 28px;
+    width: fit-content;
+    justify-self: center;
+    grid-column: 1 / -1;
+    transition: background-color 0.2s ease;
+}
+
+/* EFEITO HOVER */
+
+.btnGerar:hover {
+    background-color: #003ac7;
+}
+
+
+/* =====================================
+   RESPONSIVIDADE
+===================================== */
+
+@media (max-width: 700px) {
+
+    .containerReferencias {
+        padding: 12px;
+    }
+
+    .formReferencias {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .campo {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .campo label {
+        font-size: 11px;
+    }
+
+    .campo input,
+    .campo select {
+        font-size: 11px;
+    }
+
+    .btnGerar {
+        width: 100%;
+    }
+
+}
+
+
+/* =====================================
+   TELAS MUITO PEQUENAS
+===================================== */
+
+@media (max-width: 380px) {
+
+    .containerReferencias {
+        padding: 8px;
+    }
+
+    .campo label {
+        font-size: 10px;
+    }
+
+    .campo input,
+    .campo select {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+}

@@ -37,7 +37,7 @@ A direta curta usa aspas; a longa usa bloco sem aspas externas, letra menor, esp
 ## Arquitetura e algoritmo
 
 1. Resolver a fonte e validar propriedade se salva.
-2. Validar opções e metadados; obter autores e data estruturados, nunca fazer parsing de plainText.
+2. Validar opções e metadados; obter autores e data estruturados, nunca fazer parsing de textoPuro.
 3. Selecionar regra de responsabilidade e data para chamada.
 4. Montar chamada conforme posição e localizador.
 5. Compor trecho opcional com marcação controlada conforme modalidade.

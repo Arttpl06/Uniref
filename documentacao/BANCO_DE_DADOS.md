@@ -17,19 +17,19 @@ erDiagram
         string firebaseUid UK
         string email UK
     }
-    REFERENCE {
+    REFERENCIA {
         uuid id PK
-        uuid userId FK
-        string type
-        string title
+        uuid usuarioId FK
+        string tipo
+        string titulo
         json metadata
         int version
     }
-    REFERENCE_AUTHOR {
+    AUTOR_REFERENCIA {
         uuid id PK
-        uuid referenceId FK
-        int position
-        string kind
+        uuid referenciaId FK
+        int posicao
+        string tipo
     }
 ```
 
@@ -37,28 +37,28 @@ erDiagram
 
 | Tabela | Campos e restrições |
 |---|---|
-| users | id CHAR(36) PK; firebaseUid VARCHAR(128) UNIQUE NOT NULL; name VARCHAR(120) NOT NULL; email VARCHAR(254) UNIQUE NOT NULL, normalizado com trim e lowercase; createdAt/updatedAt DATETIME(3) |
-| bibliography_references | id CHAR(36) PK; userId CHAR(36) FK NOT NULL; type VARCHAR(32); title VARCHAR(1000); metadata JSON; authorship VARCHAR(20); plainText TEXT; segments JSON; warnings JSON; standardVersion VARCHAR(30); formatterVersion VARCHAR(30); institutionalProfile VARCHAR(40) NULL; schemaVersion INT; version INT padrão 1; idempotencyKey CHAR(36); requestHash CHAR(64); createdAt/updatedAt DATETIME(3) |
-| reference_authors | id CHAR(36) PK; referenceId CHAR(36) FK NOT NULL; position INT NOT NULL; kind VARCHAR(20); givenNames VARCHAR(200) NULL; familyName VARCHAR(200) NULL; institutionName VARCHAR(500) NULL |
+| usuarios | id CHAR(36) PK; firebaseUid VARCHAR(128) UNIQUE NOT NULL; name VARCHAR(120) NOT NULL; email VARCHAR(254) UNIQUE NOT NULL, normalizado com trim e lowercase; createdAt/updatedAt DATETIME(3) |
+| referencias_bibliograficas | id CHAR(36) PK; usuarioId CHAR(36) FK NOT NULL; tipo VARCHAR(32); titulo VARCHAR(1000); metadata JSON; autoria VARCHAR(20); quantidadeAutores INT NULL (quantidade declarada de autores); textoPuro TEXT; segmentos JSON; avisos JSON; versaoNorma VARCHAR(30); versaoFormatador VARCHAR(30); perfilInstitucional VARCHAR(40) NULL; schemaVersion INT; version INT padrão 1; idempotencyKey CHAR(36); requestHash CHAR(64); createdAt/updatedAt DATETIME(3) |
+| autores_referencia | id CHAR(36) PK; referenciaId CHAR(36) FK NOT NULL; posicao INT NOT NULL; tipo VARCHAR(20); nome VARCHAR(300) NULL; nomeInstituicao VARCHAR(500) NULL; subordinacao VARCHAR(500) NULL |
 
-Campos de referência são obrigatórios salvo indicação contrária. `institutionalProfile = null` significa que só o perfil ABNT está sendo aplicado. Valores de type: book, journalArticle, webPage, academicWork. `authorship`: known ou unknown. Validar enum tanto na aplicação quanto nas migrations com restrições compatíveis.
+Campos de referência são obrigatórios salvo indicação contrária. `perfilInstitucional = null` significa que só o perfil ABNT está sendo aplicado. Valores de tipo: livro, artigoPeriodico, paginaWeb, trabalhoAcademico. `autoria`: conhecida ou desconhecida. Validar enum tanto na aplicação quanto nas migrations com restrições compatíveis.
 
-`metadata` guarda somente campos específicos: subtítulo, publicação, acesso, periódico, grau etc. Não duplicar título e autores no JSON. A saída da API reconstitui o objeto completo. `schemaVersion` controla o formato desses dados; `formatterVersion` controla o algoritmo; `standardVersion` identifica a norma. São conceitos diferentes.
+`metadata` guarda somente campos específicos: subtitulo, publicação, acesso, periódico, grau etc. Não duplicar título e autores no JSON. A saída da API reconstitui o objeto completo. `schemaVersion` controla o formato desses dados; `versaoFormatador` controla o algoritmo; `versaoNorma` identifica a norma. São conceitos diferentes.
 
 ## Integridade
 
-- UNIQUE(userId, idempotencyKey) evita duplicação de um salvamento repetido. A chave se mantém durante novas tentativas da mesma ação; um novo salvamento usa outra chave. requestHash identifica o conteúdo original: mesma chave com conteúdo diferente retorna 409.
-- UNIQUE(referenceId, position) preserva posições sem repetição. Exigir posições contíguas no service.
-- Autor pessoal exige givenNames e familyName; institucional exige institutionName; atributos incompatíveis ficam nulos. Autoria desconhecida exige zero autores.
+- UNIQUE(usuarioId, idempotencyKey) evita duplicação de um salvamento repetido. A chave se mantém durante novas tentativas da mesma ação; um novo salvamento usa outra chave. requestHash identifica o conteúdo original: mesma chave com conteúdo diferente retorna 409.
+- UNIQUE(referenciaId, posicao) preserva posições sem repetição. Exigir posições contíguas no service.
+- Autor pessoal exige `nome` (nome completo; o motor extrai o sobrenome); institucional exige `nomeInstituicao`, com `subordinacao` opcional. Atributos incompatíveis ficam nulos. Autoria desconhecida exige zero autores. `referencias_bibliograficas` guarda `quantidadeAutores` para reconstruir a lista e a abreviação com "et al.".
 - FK referência → usuário com ON DELETE CASCADE; FK autor → referência com ON DELETE CASCADE. Exclusão de conta não faz parte da interface inicial, mas deve existir procedimento operacional documentado antes do uso público.
-- Índice (userId, createdAt, id) para histórico; (userId, type, createdAt) para filtro. Busca inicial por título pode usar LIKE parametrizado; avaliar índice textual só com volume real.
+- Índice (usuarioId, createdAt, id) para histórico; (usuarioId, tipo, createdAt) para filtro. Busca inicial por título pode usar LIKE parametrizado; avaliar índice textual só com volume real.
 - Listagem ordenada por createdAt DESC e id DESC para desempate. page começa em 1; pageSize padrão 20, máximo 100.
 
 ## Transações e concorrência
 
 Salvar referência e autores na mesma transação. A prévia não abre transação e não grava no banco.
 
-Editar com `UPDATE ... WHERE id = ? AND userId = ? AND version = ?`, incrementando version. Se nenhuma linha mudar, verificar a existência no escopo do usuário para diferenciar 404 de 409. Atualização dos autores e resultado participa da mesma transação. Não permitir atualização parcial em que texto corresponda a dados antigos.
+Editar com `UPDATE ... WHERE id = ? AND usuarioId = ? AND version = ?`, incrementando version. Se nenhuma linha mudar, verificar a existência no escopo do usuário para diferenciar 404 de 409. Atualização dos autores e resultado participa da mesma transação. Não permitir atualização parcial em que texto corresponda a dados antigos.
 
 Na repetição de POST, consultar o registro pela chave do usuário antes de reformatar: uma atualização do motor não deve mudar o retorno de uma operação já concluída. Se houver corrida de inserção, tratar a restrição UNIQUE e retornar o registro existente com conteúdo equivalente.
 
@@ -74,11 +74,11 @@ Se o backend usar ES Modules, manter arquivos do sequelize-cli em um escopo Comm
 
 ```json
 {
-  "subtitle": null,
-  "edition": "2",
-  "publicationPlace": "Fortaleza",
-  "publisher": "Editora Exemplo",
-  "publicationYear": "2025",
+  "subtitulo": null,
+  "edicao": "2",
+  "localPublicacao": "Fortaleza",
+  "editora": "Editora Exemplo",
+  "anoPublicacao": "2025",
   "online": false
 }
 ```

@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { bookDocumentSchema } from "./book.js";
+import { documentoLivroSchema } from "./livro.js";
 
-// Registro central: escolhe o schema pelo campo "type".
+// Registro central: escolhe o schema pelo campo "tipo".
 // Os demais tipos entram aqui quando forem implementados, por enquanto só há livro.
-export const referenceDocumentSchema = z.discriminatedUnion("type", [
-  bookDocumentSchema,
+export const documentoReferenciaSchema = z.discriminatedUnion("tipo", [
+  documentoLivroSchema,
 ]);

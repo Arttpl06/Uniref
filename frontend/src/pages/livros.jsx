@@ -22,6 +22,15 @@ export default function Livros() {
       serie: "",
       responsabilidade: "Autor da Obra",
       autor: "",
+      autor2: "",
+      autor3: "",
+      autor4: "",
+      autor5: "",
+      autor6: "",
+      autor7: "",
+      autor8: "",
+      autor9: "",
+      autor10: "",
       edicao: "",
       notas: "",
       tipoSuporteFisico: "Nenhum",
@@ -230,7 +239,7 @@ export default function Livros() {
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 2 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 2 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             2º Autor
@@ -239,15 +248,15 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor2"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor2}
                             onChange={handleChange}
                         />
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 3 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 3 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             3º Autor
@@ -256,15 +265,15 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor3"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor3}
                             onChange={handleChange}
                         />
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 4 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 4 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             4º Autor
@@ -273,15 +282,15 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor4"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor4}
                             onChange={handleChange}
                         />
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 5 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 5 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             5º Autor
@@ -290,15 +299,15 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor5"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor5}
                             onChange={handleChange}
                         />
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 6 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 6 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             6º Autor
@@ -307,15 +316,15 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor6"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor6}
                             onChange={handleChange}
                         />
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 7 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 7 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             7º Autor
@@ -324,15 +333,15 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor7"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor7}
                             onChange={handleChange}
                         />
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 8 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 8 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             8º Autor
@@ -341,15 +350,15 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor8"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor8}
                             onChange={handleChange}
                         />
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 9 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 9 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             9º Autor
@@ -358,15 +367,15 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor9"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor9}
                             onChange={handleChange}
                         />
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 10 &&(
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 10 && formulario.abreviada !== "Sim" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             10º Autor
@@ -375,9 +384,9 @@ export default function Livros() {
                         <input
                             className={styles.inputEscuro}
                             type="text"
-                            name="autor"
+                            name="autor10"
                             placeholder="Nome Completo"
-                            value={formulario.autor}
+                            value={formulario.autor10}
                             onChange={handleChange}
                         />
                     </div>

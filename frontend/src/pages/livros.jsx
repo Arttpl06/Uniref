@@ -152,26 +152,119 @@ export default function Livros() {
 
           <section className={styles.coluna}>
 
+              {/* TIPO DO AUTOR */}
               <div className={styles.campo}>
-                  <label className={styles.labelEscuro}>Coleção de Referências</label>
-                  <select className={styles.inputEscuro} name="colecao" value={formulario.colecao} onChange={handleChange}>
-                      <option>não classificada</option>
-                      <option>ABNT</option>
+                  <label className={styles.labelEscuro}>
+                      Tipo do Autor
+                  </label>
+
+                  <select
+                      className={styles.inputEscuro}
+                      name="tipoAutor"
+                      value={formulario.tipoAutor}
+                      onChange={handleChange}
+                  >
+                      <option>Desconhecido</option>
+                      <option>Pessoa(s) Física(s)</option>
+                      <option>Pessoa(s) Jurídica(s)</option>
                   </select>
               </div>
 
+              {/* RESPONSABILIDADE INTELECTUAL */}
               <div className={styles.campo}>
-                  <label className={styles.labelClaro}>Forma Abreviada p/ 4 autores?</label>
-                  <select className={styles.inputClaro} 
-                  name="abreviada" 
-                  value={formulario.abreviada} 
-                  onChange={handleChange}
-                  disabled={formulario.tipoAutor === "Desconhecido" || formulario.quantidadeAutores < 4}>
+                  <label className={styles.labelEscuro}>
+                      Responsabilidade Intelectual
+                  </label>
 
-                      <option>Não</option>
-                      <option>Sim</option>
+                  <select
+                      className={styles.inputEscuro}
+                      name="responsabilidade"
+                      value={formulario.responsabilidade}
+                      onChange={handleChange}
+                  >
+                      <option>Autor da Obra</option>
+                      <option>Organizador</option>
+                      <option>Editor</option>
+                      <option>Compilador</option>
                   </select>
               </div>
+
+                {formulario.tipoAutor !== "Desconhecido" && (
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            Autor*
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor === "Pessoa(s) Jurídica(s)" && (
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            Subordinação do Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="Subordinação"
+                            placeholder="Secretaria Nacional de Biodiversidade"
+                            value={formulario.Subordinação}
+                            onChange={handleChange}
+                        />
+                    </div>
+                )}
+
+              {/* QUANTIDADE DE AUTORES */}
+                {formulario.tipoAutor !== "Desconhecido" && (
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            Quantidade de Autores
+                        </label>
+
+                        <select
+                            className={styles.inputEscuro}
+                            name="quantidadeAutores"
+                            value={formulario.quantidadeAutores}
+                            onChange={handleChange}
+                        >
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(numero => (
+                                <option key={numero} value={numero}>
+                                    {numero}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+
+
+                    {formulario.tipoAutor !== "Desconhecido" &&
+                    Number(formulario.quantidadeAutores) >= 4 && (
+                        <div className={styles.campo}>
+                            <label className={styles.labelEscuro}>
+                                Forma Abreviada p/ 4 ou mais autores
+                            </label>
+
+                            <select
+                                className={styles.inputEscuro}
+                                name="abreviada"
+                                value={formulario.abreviada}
+                                onChange={handleChange}
+                            >
+                                <option>Não</option>
+                                <option>Sim</option>
+                            </select>
+                        </div>
+                    )}
 
               <div className={styles.campo}>
                   <label className={styles.labelEscuro}>Título*</label>
@@ -185,16 +278,94 @@ export default function Livros() {
                   />
               </div>
 
+              {/* SUBTÍTULO */}
               <div className={styles.campo}>
-                  <label className={styles.labelClaro}>Local (Cidade)*</label>
+                  <label className={styles.labelEscuro}>
+                      Subtítulo
+                  </label>
+
                   <input
-                      className={styles.inputClaro}
+                      className={styles.inputEscuro}
+                      type="text"
+                      name="subtitulo"
+                      placeholder="subtítulo do livro"
+                      value={formulario.subtitulo}
+                      onChange={handleChange}
+                  />
+              </div>
+
+
+            <div className={styles.campo}>
+                  <label className={styles.labelEscuro}>Outro tipo de responsabilidade</label>
+                  <input
+                      className={styles.inputEscuro}
+                      type="text"
+                      name="tipoResponsa"
+                      placeholder="Ex: Tradução de Heitor Aquino Ferreira"
+                      value={formulario.tipoResponsa}
+                      onChange={handleChange}
+                  />
+              </div>
+
+          </section>
+
+          <section className={styles.coluna}>
+
+              {/* NÚMERO DA EDIÇÃO */}
+              <div className={styles.campo}>
+                  <label className={styles.labelEscuro}>
+                      Nº da Edição
+                  </label>
+
+                  <input
+                      className={styles.inputEscuro}
+                      type="number"
+                      name="edicao"
+                      placeholder="Ex: 3"
+                      value={formulario.edicao}
+                      onChange={handleChange}
+                  />
+              </div>
+
+              <div className={styles.campo}>
+                  <label className={styles.labelEscuro}>Local (Cidade)*</label>
+                  <input
+                      className={styles.inputEscuro}
                       type="text"
                       name="local"
                       placeholder="Ex: Fortaleza"
                       value={formulario.local}
                       onChange={handleChange}
                       required
+                  />
+              </div>
+
+              {/* EDITORA */}
+              <div className={styles.campo}>
+                  <label className={styles.labelEscuro}>
+                      Editora*
+                  </label>
+
+                  <input
+                      className={styles.inputEscuro}
+                      type="text"
+                      name="editora"
+                      placeholder="Ex: Premius Editora"
+                      value={formulario.editora}
+                      onChange={handleChange}
+                      required
+                  />
+              </div>
+
+              <div className={styles.campo}>
+                  <label className={styles.labelEscuro}>Ano(aaaa)*</label>
+                  <input
+                      className={styles.inputEscuro}
+                      type="number"
+                      name="ano"
+                      placeholder="Ex: 2026"
+                      value={formulario.ano}
+                      onChange={handleChange}
                   />
               </div>
 
@@ -224,132 +395,6 @@ export default function Livros() {
                   </div>
               </div>
 
-              <div className={styles.campo}>
-                  <label className={styles.labelClaro}>On-Line?</label>
-                  <select className={styles.inputClaro} name="online" value={formulario.online} onChange={handleChange}>
-                      <option>Não</option>
-                      <option>Sim</option>
-                  </select>
-              </div>
-
-              <div className={styles.campo}>
-                  <label className={styles.labelEscuro}>Endereço (URL)</label>
-                  <input
-                      className={styles.inputEscuro}
-                      type="text"
-                      name="URL"
-                      placeholder="Ex: https..."
-                      value={formulario.URL}
-                      onChange={handleChange}
-                      disabled={formulario.online === "Não"}
-                  />
-              </div>
-
-              <div className={styles.campo}>
-                  <label className={styles.labelClaro}>Ano(aaaa)*</label>
-                  <input
-                      className={styles.inputClaro}
-                      type="number"
-                      name="ano"
-                      placeholder="Ex: 2026"
-                      value={formulario.ano}
-                      onChange={handleChange}
-                  />
-              </div>
-
-              <div className={styles.campo}>
-                  <label className={styles.labelEscuro}>Subordinação do Autor</label>
-                  <input
-                      className={styles.inputEscuro}
-                      type="text"
-                      name="Subordinação"
-                      placeholder="Secretaria Nacional de Biodiversidade"
-                      value={formulario.Subordinação}
-                      onChange={handleChange}
-                      disabled={formulario.tipoAutor === "Pessoa(s) Física(s)" || formulario.tipoAutor === "Desconhecido"}
-                  />
-              </div>
-
-          </section>
-
-
-          <section className={styles.coluna}>
-
-              {/* TIPO DO AUTOR */}
-              <div className={styles.campo}>
-                  <label className={styles.labelEscuro}>
-                      Tipo do Autor
-                  </label>
-
-                  <select
-                      className={styles.inputEscuro}
-                      name="tipoAutor"
-                      value={formulario.tipoAutor}
-                      onChange={handleChange}
-                  >
-                      <option>Desconhecido</option>
-                      <option>Pessoa(s) Física(s)</option>
-                      <option>Pessoa(s) Jurídica(s)</option>
-                  </select>
-              </div>
-
-
-              {/* QUANTIDADE DE AUTORES */}
-              <div className={styles.campo}>
-                  <label className={styles.labelClaro}>
-                      Quantidade de Autores
-                  </label>
-
-                  <select
-                      className={styles.inputClaro}
-                      name="quantidadeAutores"
-                      value={formulario.quantidadeAutores}
-                      onChange={handleChange}
-                      disabled={formulario.tipoAutor === "Desconhecido"}
-                  >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(numero => (
-                          <option key={numero} value={numero}>
-                              {numero}
-                          </option>
-                      ))}
-                  </select>
-              </div>
-
-
-              {/* SUBTÍTULO */}
-              <div className={styles.campo}>
-                  <label className={styles.labelEscuro}>
-                      Subtítulo
-                  </label>
-
-                  <input
-                      className={styles.inputEscuro}
-                      type="text"
-                      name="subtitulo"
-                      placeholder="subtítulo do livro"
-                      value={formulario.subtitulo}
-                      onChange={handleChange}
-                  />
-              </div>
-
-
-              {/* EDITORA */}
-              <div className={styles.campo}>
-                  <label className={styles.labelClaro}>
-                      Editora*
-                  </label>
-
-                  <input
-                      className={styles.inputClaro}
-                      type="text"
-                      name="editora"
-                      placeholder="Ex: Premius Editora"
-                      value={formulario.editora}
-                      onChange={handleChange}
-                      required
-                  />
-              </div>
-
 
               {/* SÉRIE */}
               <div className={styles.campo}>
@@ -368,59 +413,55 @@ export default function Livros() {
               </div>
 
 
-              {/* RESPONSABILIDADE INTELECTUAL */}
-              <div className={styles.campo}>
-                  <label className={styles.labelClaro}>
-                      Responsabilidade Intelectual
-                  </label>
+            <div className={styles.campo}>
+                  <label className={styles.labelEscuro}>Descrição Física do Suporte</label>
 
-                  <select
-                      className={styles.inputClaro}
-                      name="responsabilidade"
-                      value={formulario.responsabilidade}
-                      onChange={handleChange}
-                  >
-                      <option>Autor da Obra</option>
-                      <option>Organizador</option>
-                      <option>Editor</option>
-                      <option>Compilador</option>
-                  </select>
+                  <div className={styles.campoDuplo}>
+                      <select
+                          className={styles.inputEscuro}
+                          name="tipoSuporteFisico"
+                          value={formulario.tipoSuporteFisico}
+                          onChange={handleChange}
+                      >
+                          <option>Nenhum</option>
+                          <option>CD-ROM</option>
+                          <option>DVD</option>
+                          <option>E-Book</option>
+                          <option>Blu-ray</option>
+                          <option>Outro</option>
+                      </select>
+
+                        {formulario.tipoSuporteFisico !== "Nenhum" && (
+                            <input
+                                className={styles.inputEscuro}
+                                type="number"
+                                name="qtdSuporteFisico"
+                                placeholder="Ex: 2"
+                                value={formulario.qtdSuporteFisico}
+                                onChange={handleChange}
+                            />
+                        )}
+                  </div>
               </div>
 
 
-              {/* AUTOR */}
-              <div className={styles.campo}>
-                  <label className={styles.labelEscuro}>
-                      Autor*
-                  </label>
 
-                  <input
-                      className={styles.inputEscuro}
-                      type="text"
-                      name="autor"
-                      placeholder="Nome Completo"
-                      value={formulario.autor}
-                      onChange={handleChange}
-                      required
-                  />
-              </div>
+                {formulario.tipoSuporteFisico === "Outro" && (
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            Outro Suporte Físico
+                        </label>
 
-
-              {/* NÚMERO DA EDIÇÃO */}
-              <div className={styles.campo}>
-                  <label className={styles.labelClaro}>
-                      Nº da Edição
-                  </label>
-
-                  <input
-                      className={styles.inputClaro}
-                      type="number"
-                      name="edicao"
-                      placeholder="Ex: 3"
-                      value={formulario.edicao}
-                      onChange={handleChange}
-                  />
-              </div>
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="outroSuporteFisico"
+                            placeholder="Ex: pen drive"
+                            value={formulario.outroSuporteFisico}
+                            onChange={handleChange}
+                        />
+                    </div>
+                )}
 
 
               {/* NOTAS */}
@@ -442,48 +483,31 @@ export default function Livros() {
           </section>
 
           <section className={styles.coluna}>
-            <div className={styles.campo}>
-                  <label className={styles.labelEscuro}>Descrição Física do Suporte</label>
 
-                  <div className={styles.campoDuplo}>
-                      <select
-                          className={styles.inputEscuro}
-                          name="tipoSuporteFisico"
-                          value={formulario.tipoSuporteFisico}
-                          onChange={handleChange}
-                      >
-                          <option>Nenhum</option>
-                          <option>CD-ROM</option>
-                          <option>DVD</option>
-                          <option>E-Book</option>
-                          <option>Blu-ray</option>
-                          <option>Outro</option>
-                      </select>
-
-                      <input
-                          className={styles.inputEscuro}
-                          type="number"
-                          name="qtdSuporteFisico"
-                          placeholder="Ex: 2"
-                          value={formulario.qtdSuporteFisico}
-                          onChange={handleChange}
-                          disabled={formulario.tipoSuporteFisico === "Nenhum"}
-                      />
-                  </div>
+              <div className={styles.campo}>
+                  <label className={styles.labelEscuro}>On-Line?</label>
+                  <select className={styles.inputEscuro} name="online" value={formulario.online} onChange={handleChange}>
+                      <option>Não</option>
+                      <option>Sim</option>
+                  </select>
               </div>
 
-            <div className={styles.campo}>
-                  <label className={styles.labelClaro}>Outro Suporte Fisico</label>
-                  <input
-                      className={styles.inputClaro}
-                      type="text"
-                      name="outroSuporteFisico"
-                      placeholder="Ex: pen drive"
-                      value={formulario.outroSuporteFisico}
-                      onChange={handleChange}
-                      disabled={formulario.tipoSuporteFisico !== "Outro"}
-                  />
-              </div>
+                {formulario.online === "Sim" && (
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            Endereço (URL)
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="URL"
+                            placeholder="Ex: https..."
+                            value={formulario.URL}
+                            onChange={handleChange}
+                        />
+                    </div>
+                )}
 
             <div className={styles.campo}>
                   <label className={styles.labelEscuro}>Outro tipo de responsabilidade</label>
@@ -497,17 +521,18 @@ export default function Livros() {
                   />
               </div>
 
-
+                {formulario.online === "Sim" && (
             <div className={styles.campo}>
-                  <label className={styles.labelClaro}>data do acesso a fonte bibliografica</label>
+                  <label className={styles.labelEscuro}>data do acesso a fonte bibliografica</label>
                   <input
-                      className={styles.inputClaro}
+                      className={styles.inputEscuro}
                       type="date"
                       name="dataAcesso"
                       value={formulario.dataAcesso}
                       onChange={handleChange}
                   />
               </div>
+            )}
 
           </section>
 

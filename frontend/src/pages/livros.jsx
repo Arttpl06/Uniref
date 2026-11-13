@@ -189,41 +189,6 @@ export default function Livros() {
                   </select>
               </div>
 
-                {formulario.tipoAutor !== "Desconhecido" && (
-                    <div className={styles.campo}>
-                        <label className={styles.labelEscuro}>
-                            Autor*
-                        </label>
-
-                        <input
-                            className={styles.inputEscuro}
-                            type="text"
-                            name="autor"
-                            placeholder="Nome Completo"
-                            value={formulario.autor}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                )}
-
-                {formulario.tipoAutor === "Pessoa(s) Jurídica(s)" && (
-                    <div className={styles.campo}>
-                        <label className={styles.labelEscuro}>
-                            Subordinação do Autor
-                        </label>
-
-                        <input
-                            className={styles.inputEscuro}
-                            type="text"
-                            name="Subordinação"
-                            placeholder="Secretaria Nacional de Biodiversidade"
-                            value={formulario.Subordinação}
-                            onChange={handleChange}
-                        />
-                    </div>
-                )}
-
               {/* QUANTIDADE DE AUTORES */}
                 {formulario.tipoAutor !== "Desconhecido" && (
                     <div className={styles.campo}>
@@ -246,6 +211,58 @@ export default function Livros() {
                     </div>
                 )}
 
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores < 2 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            Autor*
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 2 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            Autores*
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}                
+
+                {formulario.tipoAutor === "Pessoa(s) Jurídica(s)" && (
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            Subordinação do Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="Subordinação"
+                            placeholder="Secretaria Nacional de Biodiversidade"
+                            value={formulario.Subordinação}
+                            onChange={handleChange}
+                        />
+                    </div>
+                )}
 
                     {formulario.tipoAutor !== "Desconhecido" &&
                     Number(formulario.quantidadeAutores) >= 4 && (
@@ -275,6 +292,7 @@ export default function Livros() {
                       placeholder="Título do livro"
                       value={formulario.titulo}
                       onChange={handleChange}
+                      required
                   />
               </div>
 
@@ -361,11 +379,12 @@ export default function Livros() {
                   <label className={styles.labelEscuro}>Ano(aaaa)*</label>
                   <input
                       className={styles.inputEscuro}
-                      type="number"
+                      type="text"
                       name="ano"
                       placeholder="Ex: 2026"
                       value={formulario.ano}
                       onChange={handleChange}
+                      required
                   />
               </div>
 
@@ -431,7 +450,7 @@ export default function Livros() {
                           <option>Outro</option>
                       </select>
 
-                        {formulario.tipoSuporteFisico !== "Nenhum" && (
+                        {formulario.tipoSuporteFisico !== "Nenhum" && formulario.tipoSuporteFisico !== "E-Book" &&(
                             <input
                                 className={styles.inputEscuro}
                                 type="number"
@@ -508,18 +527,6 @@ export default function Livros() {
                         />
                     </div>
                 )}
-
-            <div className={styles.campo}>
-                  <label className={styles.labelEscuro}>Outro tipo de responsabilidade</label>
-                  <input
-                      className={styles.inputEscuro}
-                      type="text"
-                      name="tipoResponsa"
-                      placeholder="Ex: Tradução de Heitor Aquino Ferreira"
-                      value={formulario.tipoResponsa}
-                      onChange={handleChange}
-                  />
-              </div>
 
                 {formulario.online === "Sim" && (
             <div className={styles.campo}>

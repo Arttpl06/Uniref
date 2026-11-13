@@ -1,25 +1,91 @@
-export async function sync(req, res) {
-  const { uid, email, name, email_verified: emailVerified } = req.firebaseUser;
-  const allowedDomain = (process.env.ALLOWED_EMAIL_DOMAIN ?? '@unifor.br').toLowerCase();
+import {syncFirebaseUser,getMyProfile} from './auth.service.js';
 
-  if (!email || !email.toLowerCase().endsWith(allowedDomain)) {
-    // 403 = domínio não permitido (contrato API.md). Nada é gravado.
-    return res.status(403).json({
-      error: { code: 'DOMAIN_NOT_ALLOWED', message: 'Somente e-mail institucional @unifor.br.' },
+export async function sync(req, res) {
+  try {
+    const user = await syncFirebaseUser(req.firebaseUser);
+
+    return res.status(200).json({
+      data: {
+        id: user.id,
+        firebaseUid: user.firebaseUid,
+        name: user.name,
+        email: user.email,
+        emailVerified: true
+      }
+    });
+
+  } catch (error) {
+    if (error.status === 403) {
+      return res.status(403).json({
+        error: {
+          code: error.code,
+          message: error.message
+        }
+      });
+    }
+
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(409).json({
+        error: {
+          code: 'EMAIL_CONFLICT',
+          message: 'E-mail já associado a outro usuário.'
+        }
+      });
+    }
+
+    console.error('Erro ao sincronizar usuário:', error);
+
+    return res.status(500).json({
+      error: {
+        code: 'INTERNAL',
+        message: 'Falha interna.'
+      }
     });
   }
-
-  // TODO (Passo 5 da doc): upsert em users(firebaseUid) via Sequelize.
-  // Até lá, respondemos com a identidade já validada.
-  return res.status(200).json({
-    data: { firebaseUid: uid, email, name: name ?? null, emailVerified: Boolean(emailVerified) },
-  });
 }
+
 
 export async function me(req, res) {
-  const { uid, email, name, email_verified: emailVerified } = req.firebaseUser;
+  try {
+    const user = await getMyProfile(req.firebaseUser);
 
-  return res.status(200).json({
-    data: { firebaseUid: uid, email, name: name ?? null, emailVerified: Boolean(emailVerified) },
-  });
+    if (!user) {
+      return res.status(404).json({
+        error: {
+          code: 'USER_NOT_FOUND',
+          message: 'Usuário não encontrado. Sincronize sua conta.'
+        }
+      });
+    }
+
+    return res.status(200).json({
+      data: {
+        id: user.id,
+        firebaseUid: user.firebaseUid,
+        name: user.name,
+        email: user.email,
+        emailVerified: true
+      }
+    });
+
+  } catch (error) {
+    if (error.status === 403) {
+      return res.status(403).json({
+        error: {
+          code: error.code,
+          message: error.message
+        }
+      });
+    }
+
+    console.error('Erro ao consultar perfil:', error);
+
+    return res.status(500).json({
+      error: {
+        code: 'INTERNAL',
+        message: 'Erro ao consultar usuário.'
+      }
+    });
+  }
 }
+

@@ -104,12 +104,10 @@
 
 ---
 
-### (Campo de escrita\*1 obrigatória)
+### (Campo de escrita obrigatória)
 
 **Ano**  
 [Ex: 2021]
-
-1\*Já que Ano é um conjunto finito de opções da pra deixar esse campo como uma escolha, usando algum seletor de ano
 
 ---
 
@@ -150,7 +148,7 @@
 [Ex: 2]
 
 1\* Esse campo só deve existir caso o campo de escolha esteja marcado com alguma opção que não seja "Nenhum" nem "e-book" (e-book não recebe quantidade — a norma prevê apenas "E-book")
-2\* Caso o campo de escolha esteja marcado como "Outro", deve se criar um novo campo de escrita\*3 obrigatório assim ->
+2\* Caso o campo de escolha esteja marcado como "Outro", deve se criar um novo campo de escrita obrigatório assim ->
 
 Outro:  
 [Ex: pen drive]

@@ -242,7 +242,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}
@@ -260,7 +259,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}
@@ -278,7 +276,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}
@@ -296,7 +293,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}
@@ -314,7 +310,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}
@@ -332,7 +327,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}
@@ -350,7 +344,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}
@@ -368,7 +361,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}
@@ -386,7 +378,6 @@ export default function Livros() {
                             placeholder="Nome Completo"
                             value={formulario.autor}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 )}

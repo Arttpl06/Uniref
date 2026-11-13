@@ -211,7 +211,7 @@ export default function Livros() {
                     </div>
                 )}
 
-                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores < 2 &&(
+                {formulario.tipoAutor !== "Desconhecido" &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
                             Autor*
@@ -232,7 +232,7 @@ export default function Livros() {
                 {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 2 &&(
                     <div className={styles.campo}>
                         <label className={styles.labelEscuro}>
-                            Autores*
+                            2º Autor
                         </label>
 
                         <input
@@ -245,7 +245,151 @@ export default function Livros() {
                             required
                         />
                     </div>
-                )}                
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 3 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            3º Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 4 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            4º Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 5 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            5º Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 6 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            6º Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 7 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            7º Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 8 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            8º Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 9 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            9º Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
+
+                {formulario.tipoAutor !== "Desconhecido" && formulario.quantidadeAutores >= 10 &&(
+                    <div className={styles.campo}>
+                        <label className={styles.labelEscuro}>
+                            10º Autor
+                        </label>
+
+                        <input
+                            className={styles.inputEscuro}
+                            type="text"
+                            name="autor"
+                            placeholder="Nome Completo"
+                            value={formulario.autor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                )}
 
                 {formulario.tipoAutor === "Pessoa(s) Jurídica(s)" && (
                     <div className={styles.campo}>
@@ -282,6 +426,10 @@ export default function Livros() {
                             </select>
                         </div>
                     )}
+
+          </section>
+
+          <section className={styles.coluna}>
 
               <div className={styles.campo}>
                   <label className={styles.labelEscuro}>Título*</label>
@@ -324,10 +472,6 @@ export default function Livros() {
                       onChange={handleChange}
                   />
               </div>
-
-          </section>
-
-          <section className={styles.coluna}>
 
               {/* NÚMERO DA EDIÇÃO */}
               <div className={styles.campo}>
@@ -414,6 +558,9 @@ export default function Livros() {
                   </div>
               </div>
 
+          </section>
+
+          <section className={styles.coluna}>
 
               {/* SÉRIE */}
               <div className={styles.campo}>
@@ -498,10 +645,6 @@ export default function Livros() {
                       onChange={handleChange}
                   />
               </div>
-
-          </section>
-
-          <section className={styles.coluna}>
 
               <div className={styles.campo}>
                   <label className={styles.labelEscuro}>On-Line?</label>

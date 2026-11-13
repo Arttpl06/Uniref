@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Styles from "./fundoSite.module.css";
-import styles from "./livros.module.css";
+import styles from "./fundoRefs.module.css";
+import style from "./livros.module.css";
 import logoUniforBranca from "../assets/logoUniforBranca.png"
 
 export default function Livros() {
@@ -71,7 +72,7 @@ export default function Livros() {
         <img src={logoUniforBranca} alt="logoUnifor" className={Styles.logo}/>
 
         <nav className={Styles.navegacao}>
-          <a href="#inicio" className={Styles.ativo}>
+          <a href="#inicio">
             Início
           </a>
 
@@ -138,14 +139,14 @@ export default function Livros() {
 
       </header>
 
-      <main className={styles.containerReferencias}>
+      <main className={style.containerReferencias}>
 
           <h3 className={styles.tituloFormulario}>
               ELABORAR REFERÊNCIA A LIVROS:
           </h3>
 
           <form
-              className={styles.formReferencias}
+              className={style.formReferencias}
               onSubmit={handleSubmit}
           >
 

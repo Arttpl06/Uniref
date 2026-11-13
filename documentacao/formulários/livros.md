@@ -149,7 +149,7 @@
 **Quantidade:**  
 [Ex: 2]
 
-1\* Esse campo só deve existir caso o campo de escolha esteja marcado com alguma opção que não seja "Nenhum"  
+1\* Esse campo só deve existir caso o campo de escolha esteja marcado com alguma opção que não seja "Nenhum" nem "e-book" (e-book não recebe quantidade — a norma prevê apenas "E-book")
 2\* Caso o campo de escolha esteja marcado como "Outro", deve se criar um novo campo de escrita\*3 obrigatório assim ->
 
 Outro:  

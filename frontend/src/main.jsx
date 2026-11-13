@@ -6,6 +6,7 @@ import PasswordNewPage from './pages/PasswordNewPage.jsx'
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage.jsx'
 import PasswordVerificationPage from './pages/PasswordVerificationPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
+import Livros from './pages/livros.jsx'
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
 
 
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/PasswordNewPage" element={<PasswordNewPage />}></Route>
           <Route path="/PasswordRecoveryPage" element={<PasswordRecoveryPage />}></Route>
           <Route path="/PasswordVerificationPage" element={<PasswordVerificationPage />}></Route>
+          <Route path="/Livros" element={<Livros />}></Route>
        </Routes>
     </BrowserRouter>
   </React.StrictMode>,

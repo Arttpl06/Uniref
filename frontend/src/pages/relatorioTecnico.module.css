@@ -1,0 +1,14 @@
+.containerReferencias {
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.formReferencias {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    max-width: 200vh;
+    width: 100%;
+}

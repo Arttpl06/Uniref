@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import styles from "./inicioPage.module.css";
 import Styles from "./fundoSite.module.css";
 import logoUniforBranca from "../assets/logoUniforBranca.png"
+import { useNavigate } from 'react-router-dom';
 
 export default function InicioPage() {
+  const navigate = useNavigate();
+
   const [menuAtivo, setMenuAtivo] = useState(null);
 
   const [perfilAberto, setPerfilAberto] = useState(false);
@@ -209,7 +212,7 @@ export default function InicioPage() {
                 <button
                   key={index}
                   className={styles.itemSubmenu}
-                  onClick={() => console.log("Opção:", opcao)}
+                  onClick={() => navigate("/" + opcao)}  
                 >
                   {opcao}
                 </button>

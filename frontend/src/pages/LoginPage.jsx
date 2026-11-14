@@ -9,9 +9,13 @@ import simbolo2 from "../assets/simboloUnifor2.png"
 import simbolo3 from "../assets/simboloUnifor3.png"
 import simbolo4 from "../assets/simboloUnifor4.png"
 import simbolo5 from "../assets/simboloUnifor5.png"
+import { useNavigate } from 'react-router-dom';
 
 
 export default function LoginPage(){
+
+    const navigate = useNavigate();
+
     return(
         <div className={Styles.fundo}>
             <div className={Styles.titulo}>
@@ -27,7 +31,7 @@ export default function LoginPage(){
                 <Input tipo='password'/><br></br>
                 <Link to="/PasswordRecoveryPage" className="me-5 pe-4">Esqueci a Senha</Link>
                 <Link to="/RegisterPage" className="ms-5">Cadastrar</Link><br></br>
-                <button className="btn btn-primary mt-4 w-100">Acessar</button>
+                <button className="btn btn-primary mt-4 w-100" onClick={() => navigate('/InicioPage')}>Acessar</button>
             </div>
             <div>
                 <img src={simbolo2} alt="simbolo2" className={Styles.simbolos}/>

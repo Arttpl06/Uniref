@@ -432,10 +432,10 @@ export default function Dicionarios() {
                     {formulario.tipoAutor !== "Desconhecido" && 
                     formulario.tipoAutor !== "Entidade Coletiva(Assoc, Emp, etc)" &&
                     formulario.tipoAutor !== "Orgãos Governamentais" &&
-                    Number(formulario.quantidadeAutores) > 3 && (
+                    Number(formulario.quantidadeAutores) >= 4 && (
                         <div className={styles.campo}>
                             <label className={styles.labelEscuro}>
-                                Forma Abreviada p/ mais de 3 autores
+                                Forma Abreviada p/ 4 ou mais autores
                             </label>
 
                             <select

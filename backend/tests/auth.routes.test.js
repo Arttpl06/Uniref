@@ -12,7 +12,7 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import request from 'supertest';
 
-process.env.ALLOWED_EMAIL_DOMAIN = '@edu.unifor.br';
+process.env.ALLOWED_EMAIL_DOMAINS = '@edu.unifor.br,@unifor.br';
 
 const usuarios = new Map();
 let proximoId = 1;
@@ -123,6 +123,50 @@ describe('POST /api/v1/auth/sync', () => {
     expect(resposta.body.error.code).toBe('DOMAIN_NOT_ALLOWED');
     expect(createUserMock).not.toHaveBeenCalled();
     expect(updateUserMock).not.toHaveBeenCalled();
+  });
+
+  test('aceita email do dominio @unifor.br', async () => {
+    verifyIdTokenMock.mockResolvedValueOnce({
+      uid: 'uid-professor-001',
+      email: 'professor@unifor.br',
+      name: 'Professor de Teste',
+      email_verified: true,
+    });
+
+    const resposta = await autenticado('post', '/api/v1/auth/sync');
+
+    expect(resposta.status).toBe(200);
+    expect(resposta.body.data.email).toBe('professor@unifor.br');
+    expect(createUserMock).toHaveBeenCalledWith(expect.objectContaining({
+      firebaseUid: 'uid-professor-001',
+      email: 'professor@unifor.br',
+    }));
+  });
+
+  test('rejeita dominio parecido que nao esta na lista', async () => {
+    verifyIdTokenMock.mockResolvedValueOnce({
+      ...usuarioFirebase,
+      email: 'aluno@notunifor.br',
+    });
+
+    const resposta = await autenticado('post', '/api/v1/auth/sync');
+
+    expect(resposta.status).toBe(403);
+    expect(resposta.body.error.code).toBe('DOMAIN_NOT_ALLOWED');
+    expect(createUserMock).not.toHaveBeenCalled();
+  });
+
+  test('rejeita subdominio que nao esta na lista', async () => {
+    verifyIdTokenMock.mockResolvedValueOnce({
+      ...usuarioFirebase,
+      email: 'aluno@sub.edu.unifor.br',
+    });
+
+    const resposta = await autenticado('post', '/api/v1/auth/sync');
+
+    expect(resposta.status).toBe(403);
+    expect(resposta.body.error.code).toBe('DOMAIN_NOT_ALLOWED');
+    expect(createUserMock).not.toHaveBeenCalled();
   });
 
   test('retorna 403 se o email nao foi verificado', async () => {
@@ -249,5 +293,21 @@ describe('GET /api/v1/auth/me', () => {
 
     expect(resposta.status).toBe(403);
     expect(resposta.body.error.code).toBe('DOMAIN_NOT_ALLOWED');
+  });
+
+  test('aceita email @unifor.br no perfil', async () => {
+    verifyIdTokenMock.mockResolvedValue({
+      uid: 'uid-professor-002',
+      email: 'professor@unifor.br',
+      name: 'Professor de Teste',
+      email_verified: true,
+    });
+
+    await autenticado('post', '/api/v1/auth/sync');
+
+    const resposta = await autenticado('get', '/api/v1/auth/me');
+
+    expect(resposta.status).toBe(200);
+    expect(resposta.body.data.email).toBe('professor@unifor.br');
   });
 });

@@ -6,7 +6,7 @@ Versão 0.2 — revisada com as decisões do grupo em 29/09/2026. Todos os itens
 
 | ID | Requisito verificável | Prioridade / origem | Critério de aceite |
 |---|---|---|---|
-| RF01 | Cadastrar usuário com nome, e-mail institucional e senha | Obrigatório / S | Dados válidos criam conta via Firebase Auth; e-mail @unifor.br duplicado retorna conflito; senha não aparece nas respostas |
+| RF01 | Cadastrar usuário com nome, e-mail institucional e senha | Obrigatório / S | Dados válidos criam conta via Firebase Auth; e-mail institucional (@edu.unifor.br ou @unifor.br) duplicado retorna conflito; senha não aparece nas respostas |
 | RF02 | Autenticar e encerrar autenticação | Obrigatório / S + P | Credenciais válidas permitem login via Firebase Auth; inválidas dão mensagem genérica; após logout o token anterior deixa de autorizar |
 | RF03 | Selecionar livro, artigo de periódico, página web ou trabalho acadêmico | Obrigatório / S + P | Cada escolha exibe somente os campos aplicáveis; trabalho acadêmico distingue TCC, dissertação e tese |
 | RF04 | Adicionar, remover e reordenar autores pessoais ou institucionais | Obrigatório / P | Ordem enviada é preservada; autoria desconhecida é opção explícita, sem autor inventado |

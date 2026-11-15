@@ -7,7 +7,7 @@ Base: `/api/v1`. JSON UTF-8. Autenticação por Bearer token (Firebase Auth). Es
 | Método e rota | Acesso | Entrada / comportamento | Sucesso |
 |---|---|---|---|
 | GET /health | Público | Estado mínimo do processo, sem segredos | 200 |
-| POST /auth/sync | Token Firebase válido | Bearer token; valida domínio @unifor.br e faz upsert do usuário no MySQL | 200 |
+| POST /auth/sync | Token Firebase válido | Bearer token; valida os domínios @edu.unifor.br e @unifor.br e faz upsert do usuário no MySQL | 200 |
 | GET /auth/me | Autenticado | Usuário atual sem dados sensíveis | 200 |
 | POST /references/preview | Público | Documento bibliográfico, sem persistência | 200 |
 | POST /references | Autenticado | Documento; header Idempotency-Key UUID | 201 ou 200 em repetição |
@@ -16,7 +16,7 @@ Base: `/api/v1`. JSON UTF-8. Autenticação por Bearer token (Firebase Auth). Es
 | PUT /references/:id | Autenticado | Documento completo e version atual | 200 |
 | DELETE /references/:id | Autenticado | Remove somente registro próprio | 204 |
 
-Firebase Auth no frontend retorna um ID token (JWT) após login. O frontend envia `Authorization: Bearer <idToken>` nas rotas autenticadas. O backend verifica a assinatura via `firebase-admin` e extrai `uid` e `email`. Sem cookie de sessão, o mecanismo CSRF não é necessário. POST /auth/sync é chamado após o login no Firebase: o backend valida o e-mail contra ALLOWED_EMAIL_DOMAIN e grava/atualiza users por firebaseUid. E-mail fora do domínio retorna 403 e nenhum registro é criado no MySQL.
+Firebase Auth no frontend retorna um ID token (JWT) após login. O frontend envia `Authorization: Bearer <idToken>` nas rotas autenticadas. O backend verifica a assinatura via `firebase-admin` e extrai `uid` e `email`. Sem cookie de sessão, o mecanismo CSRF não é necessário. POST /auth/sync é chamado após o login no Firebase: o backend valida o e-mail contra a lista `ALLOWED_EMAIL_DOMAINS` e grava/atualiza users por firebaseUid. E-mail fora dos domínios permitidos retorna 403 e nenhum registro é criado no MySQL.
 
 ## Entrada de livro
 

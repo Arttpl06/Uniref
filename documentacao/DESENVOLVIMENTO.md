@@ -51,7 +51,7 @@ Revisar acessibilidade e usabilidade, medir metas, testar migrations e restaura�
 | DB_HOST, DB_PORT, DB_NAME | Conexão com o banco |
 | DB_USER, DB_PASSWORD | Credencial de menor privilégio |
 | FIREBASE_SERVICE_ACCOUNT | Credencial JSON do Firebase Admin, externa ao código |
-| ALLOWED_EMAIL_DOMAIN | Domínio de e-mail permitido para cadastro (ex: @unifor.br) |
+| ALLOWED_EMAIL_DOMAINS | Lista separada por vírgula de domínios permitidos para cadastro (ex: @edu.unifor.br,@unifor.br) |
 | VITE_API_BASE_URL | Caminho público /api/v1, nunca credenciais |
 | VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID | Configuração pública do SDK Firebase no frontend |
 

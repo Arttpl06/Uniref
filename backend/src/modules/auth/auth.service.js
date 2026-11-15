@@ -1,4 +1,5 @@
 import {findByFirebaseUid,createUser,updateUser} from '../users/users.repository.js';
+import { isAllowedEmail } from '../../config/emailDomains.js';
 
 export async function syncFirebaseUser(firebaseUser) {
   const {uid,email,name,email_verified: emailVerified} = firebaseUser;
@@ -10,13 +11,9 @@ if (emailVerified !== true) {
   throw error;
 }
 
-  const allowedDomain = (
-    process.env.ALLOWED_EMAIL_DOMAIN || '@edu.unifor.br'
-  ).trim().toLowerCase();
-
   const normalizedEmail = email?.trim().toLowerCase() || '';
 
-if (!normalizedEmail.endsWith(allowedDomain)) {
+  if (!isAllowedEmail(normalizedEmail)) {
     const error = new Error('E-mail institucional obrigatório');
     error.status = 403;
     error.code = 'DOMAIN_NOT_ALLOWED';
@@ -48,13 +45,9 @@ if (!existingUser) {
 
 
 export async function getMyProfile(firebaseUser) {
-  const allowedDomain = (
-    process.env.ALLOWED_EMAIL_DOMAIN || '@unifor.br'
-  ).trim().toLowerCase();
-
   const email = firebaseUser.email?.trim().toLowerCase() || '';
 
-  if (!email.endsWith(allowedDomain)) {
+  if (!isAllowedEmail(email)) {
     const error = new Error('E-mail institucional obrigatório');
     error.status = 403;
     error.code = 'DOMAIN_NOT_ALLOWED';

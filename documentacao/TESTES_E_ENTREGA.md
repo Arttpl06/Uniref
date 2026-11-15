@@ -21,7 +21,7 @@ Testes abaixo são planejados. Nenhum teste de aplicação foi executado nesta e
 | T13 Usabilidade e acesso | RF14, RNF03–05 | Tarefa com 5 participantes, teclado e leitor de tela |
 | T14 Ambiente e banco | RNF10–11 | Migrations em MySQL, backup e restauração em ambiente isolado |
 | T15 Desempenho | RNF02 | Carga e p95 com ambiente e amostra registrados |
-| T22 Restrição de domínio | RF01 | Cadastro com @unifor.br sincroniza; outros domínios recebem 403 no sync e não vira usuário no MySQL |
+| T22 Restrição de domínio | RF01 | Cadastro com @edu.unifor.br ou @unifor.br sincroniza; outros domínios recebem 403 no sync e não vira usuário no MySQL |
 
 ## Níveis de teste
 

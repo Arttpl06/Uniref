@@ -38,7 +38,7 @@ Recomendações de organização de camadas, divisão de trabalho e metas de des
 | ADR08 | Geração pública, salvamento explícito | Menor barreira de uso; necessidade de rate limit |
 | ADR09 | Campos comuns em colunas, específicos em JSON | Menos tabelas por subtipo; schemas e migrações de payload exigem disciplina |
 | ADR10 | NBR 6023:2025 para referências; NBR 10520:2023 para citações | Padrão específico da Unifor fora do escopo atual |
-| ADR11 | Firebase Auth com restrição de domínio @unifor.br | Cadastro validado no frontend (UX) e no backend em /auth/sync (segurança); Cloud Functions blocking ficaria fora do plano gratuito |
+| ADR11 | Firebase Auth com restrição aos domínios @edu.unifor.br e @unifor.br | Cadastro validado no frontend (UX) e no backend em /auth/sync (segurança); Cloud Functions blocking ficaria fora do plano gratuito |
 
 ## Perguntas a resolver na primeira reunião
 

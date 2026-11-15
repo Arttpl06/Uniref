@@ -11,6 +11,7 @@ import InicioPage from './pages/inicoPage.jsx'
 import Dicionarios from './pages/dicionarios.jsx'
 import RelatorioTec from './pages/relatorioTecnico.jsx'
 import DisertacaoTese from './pages/disertacoesTeses.jsx'
+import Ref from './pages/Ref.jsx'
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
 
 
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/PasswordRecoveryPage" element={<PasswordRecoveryPage />}></Route>
           <Route path="/PasswordVerificationPage" element={<PasswordVerificationPage />}></Route>
           <Route path="/InicioPage" element={<InicioPage />}></Route>
+          <Route path="/Ref" element={<Ref />}></Route>
           <Route path="/Livros" element={<Livros />}></Route>
           <Route path="/Dicionários" element={<Dicionarios />}></Route>
           <Route path="/Enciclopédias" element={<Dicionarios />}></Route>

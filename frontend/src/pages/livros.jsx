@@ -3,8 +3,11 @@ import Styles from "./fundoSite.module.css";
 import styles from "./fundoRefs.module.css";
 import style from "./livros.module.css";
 import logoUniforBranca from "../assets/logoUniforBranca.png"
+import { useNavigate } from 'react-router-dom';
 
 export default function Livros() {
+
+  const navigate = useNavigate();
 
   const [formulario, setFormulario] = useState({
       colecao: "não classificada",
@@ -690,6 +693,7 @@ export default function Livros() {
           <button
               type="submit"
               className={styles.btnGerar}
+              onClick={() => navigate("/Ref")}
           >
               Gerar Referências e Citações
           </button>

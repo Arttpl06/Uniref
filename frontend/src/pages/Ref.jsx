@@ -3,8 +3,11 @@ import Styles from "./fundoSite.module.css";
 import styles from "./fundoRefs.module.css";
 import style from "./Ref.module.css";
 import logoUniforBranca from "../assets/logoUniforBranca.png"
+import { useNavigate } from 'react-router-dom';
 
-export default function LivrosRef() {
+export default function Ref() {
+
+  const navigate = useNavigate();
 
   const [formulario, setFormulario] = useState({
       colecao: "não classificada",
@@ -188,6 +191,7 @@ export default function LivrosRef() {
           <button
               type="submit"
               className={styles.btnGerar}
+              onClick={() => navigate("/InicioPage")}
           >
               Voltar
           </button>

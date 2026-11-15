@@ -4,10 +4,12 @@ import styles from "./fundoRefs.module.css";
 import style from "./livros.module.css";
 import logoUniforBranca from "../assets/logoUniforBranca.png"
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 
 export default function Livros() {
 
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const [formulario, setFormulario] = useState({
       colecao: "não classificada",
@@ -133,7 +135,7 @@ export default function Livros() {
 
               <div className={Styles.usuario}>
                 <span>Você acessou como:</span>
-                <strong>Nome do Usuário</strong>
+                <strong>{user?.displayName || user?.email}</strong>
               </div>
 
               <button>Gerenciar Referências</button>
@@ -141,7 +143,7 @@ export default function Livros() {
               <button>Atualizar Perfil</button>
 
               <div className={Styles.areaSair}>
-                <button>Sair</button>
+                <button onClick={logout}>Sair</button>
               </div>
 
             </div>

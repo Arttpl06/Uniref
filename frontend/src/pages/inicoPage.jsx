@@ -3,9 +3,11 @@ import styles from "./inicioPage.module.css";
 import Styles from "./fundoSite.module.css";
 import logoUniforBranca from "../assets/logoUniforBranca.png"
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 
 export default function InicioPage() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const [menuAtivo, setMenuAtivo] = useState(null);
 
@@ -152,7 +154,7 @@ export default function InicioPage() {
 
               <div className={Styles.usuario}>
                 <span>Você acessou como:</span>
-                <strong>Nome do Usuário</strong>
+                <strong>{user?.displayName || user?.email}</strong>
               </div>
 
               <button>Gerenciar Referências</button>
@@ -160,7 +162,7 @@ export default function InicioPage() {
               <button>Atualizar Perfil</button>
 
               <div className={Styles.areaSair}>
-                <button>Sair</button>
+                <button onClick={logout}>Sair</button>
               </div>
 
             </div>

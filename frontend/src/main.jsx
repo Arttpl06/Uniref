@@ -12,27 +12,34 @@ import Dicionarios from './pages/dicionarios.jsx'
 import RelatorioTec from './pages/relatorioTecnico.jsx'
 import DisertacaoTese from './pages/disertacoesTeses.jsx'
 import Ref from './pages/Ref.jsx'
-import { BrowserRouter, Routes, Route} from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './auth/AuthContext.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/RegisterPage" element={<RegisterPage/>}/> 
-          <Route path="/LoginPage" element={<LoginPage />}></Route>
-          <Route path="/PasswordNewPage" element={<PasswordNewPage />}></Route>
-          <Route path="/PasswordRecoveryPage" element={<PasswordRecoveryPage />}></Route>
-          <Route path="/PasswordVerificationPage" element={<PasswordVerificationPage />}></Route>
-          <Route path="/InicioPage" element={<InicioPage />}></Route>
-          <Route path="/Ref" element={<Ref />}></Route>
-          <Route path="/Livros" element={<Livros />}></Route>
-          <Route path="/Dicionários" element={<Dicionarios />}></Route>
-          <Route path="/Enciclopédias" element={<Dicionarios />}></Route>
-          <Route path="/Relatório Técnico" element={<RelatorioTec />}></Route>
-          <Route path="/Teses, Dissertações e TCC's" element={<DisertacaoTese />}></Route>
-       </Routes>
-    </BrowserRouter>
+          <Route path="/LoginPage" element={<LoginPage />} />
+          <Route path="/RegisterPage" element={<RegisterPage />} />
+          <Route path="/PasswordNewPage" element={<PasswordNewPage />} />
+          <Route path="/PasswordRecoveryPage" element={<PasswordRecoveryPage />} />
+          <Route path="/PasswordVerificationPage" element={<PasswordVerificationPage />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/InicioPage" element={<InicioPage />} />
+            <Route path="/Ref" element={<Ref />} />
+            <Route path="/Livros" element={<Livros />} />
+            <Route path="/Dicionários" element={<Dicionarios />} />
+            <Route path="/Enciclopédias" element={<Dicionarios />} />
+            <Route path="/Relatório Técnico" element={<RelatorioTec />} />
+            <Route path="/Teses, Dissertações e TCC's" element={<DisertacaoTese />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>,
 )

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Button({ label, to, onClick, type = "button" }) {
+function Button({ label, to, onClick, type = "button", disabled = false }) {
     const className = "btn btn-primary mt-4 w-100";
 
     if (to) {
@@ -8,7 +8,7 @@ function Button({ label, to, onClick, type = "button" }) {
     }
 
     return (
-        <button type={type} className={className} onClick={onClick}>
+        <button type={type} className={className} onClick={onClick} disabled={disabled}>
             {label}
         </button>
     );

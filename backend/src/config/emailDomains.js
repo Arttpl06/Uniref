@@ -34,11 +34,25 @@ export const allowedEmailDomains = parseAllowedEmailDomains(
 
 // Compara o domínio exato (não usa sufixo): subdomínios e domínios parecidos
 // só são aceitos se estiverem explicitamente na lista.
+
 export function isAllowedEmail(email) {
-  const normalized = String(email ?? '').trim().toLowerCase();
-  const at = normalized.lastIndexOf('@');
+  if (typeof email !== 'string') {
+    return false;
+  }
 
-  if (at <= 0 || at === normalized.length - 1) return false;
+  const normalized = email.trim().toLowerCase();
+  const parts = normalized.split('@');
 
-  return allowedEmailDomains.includes(normalized.slice(at));
+  // O e-mail precisa ter exatamente um @
+  if (
+    parts.length !== 2 ||
+    !parts[0] ||
+    !parts[1] ||
+    /\s/.test(normalized)
+  ) {
+    return false;
+  }
+
+  return allowedEmailDomains.includes(`@${parts[1]}`);
 }
+

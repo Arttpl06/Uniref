@@ -99,6 +99,8 @@ const PREFIXOS_SOBRENOME = new Set([
   "les",
   "lo",
   "los",
+  "del",
+  "della",
   "van",
   "von",
   "di",
@@ -280,6 +282,17 @@ export function formatAutores(document, avisos = []) {
   return comPonto(joined);
 }
 
+// Reconhece artigo definido/indefinido no início do título.
+// Usado na entrada pelo título das referências (8.2.1) e das citações
+// (NBR 10520:2023, 6.1.1.4 c).
+export function ehArtigoInicial(palavra) {
+  const primeira = String(palavra ?? "")
+    .toLocaleLowerCase("pt-BR")
+    .replace(/[^\p{L}']/gu, "");
+
+  return ARTIGOS_INICIAIS.has(primeira);
+}
+
 // 8.1.4 e 8.2.1: entrada pelo título, com a primeira palavra em maiúsculas.
 // Se a primeira palavra for artigo, a palavra seguinte também fica em maiúsculas.
 export function formatEntradaTitulo(titulo) {
@@ -289,11 +302,7 @@ export function formatEntradaTitulo(titulo) {
 
   if (palavras.length === 0) return "";
 
-  const primeira = palavras[0]
-    .toLocaleLowerCase("pt-BR")
-    .replace(/[^\p{L}']/gu, "");
-
-  const maiusculas = ARTIGOS_INICIAIS.has(primeira) ? 2 : 1;
+  const maiusculas = ehArtigoInicial(palavras[0]) ? 2 : 1;
 
   return palavras
     .map((palavra, index) =>

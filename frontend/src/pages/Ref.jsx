@@ -3,71 +3,39 @@ import Styles from "./fundoSite.module.css";
 import styles from "./fundoRefs.module.css";
 import style from "./Ref.module.css";
 import logoUniforBranca from "../assets/logoUniforBranca.png"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 
 export default function Ref() {
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
 
-  const [formulario, setFormulario] = useState({
-      colecao: "não classificada",
-      abreviada: "Não",
-      titulo: "",
-      local: "",
-      tipoPagina: "Nº de páginas",
-      quantidadePaginas: "",
-      online: "Não",
-      ano: "",
-      tipoAutor: "Desconhecido",
-      quantidadeAutores: "1",
-      subtitulo: "",
-      editora: "",
-      serie: "",
-      responsabilidade: "Autor da Obra",
-      autor: "",
-      edicao: "",
-      notas: "",
-      tipoSuporteFisico: "Nenhum",
-      qtdSuporteFisico: "",
-      outroSuporteFisico: "",
-      URL: "",
-      Subordinação: "",
-      tipoResponsa: "",
-      dataAcesso: ""
-  });
-
-  const handleChange = (e) => {
-      const { name, value } = e.target;
-
-      setFormulario((anterior) => ({
-          ...anterior,
-          [name]: value
-      }));
-  };
-
-  const handleSubmit = (e) => {
-      e.preventDefault();
-
-      console.log("Dados do formulário:", formulario);
-  };
-
+  const estado = location.state || {};
+  const referencia = estado.referencia;
+  const citacao = estado.citacao;
 
   const [perfilAberto, setPerfilAberto] = useState(false);
 
   const [pesquisa, setPesquisa] = useState("");
 
-  function alternarMenu(index) {
-    setMenuAtivo(menuAtivo === index ? null : index);
-    setPerfilAberto(false);
-  }
-
   function alternarPerfil() {
     setPerfilAberto(!perfilAberto);
-    setMenuAtivo(null);
   }
 
+  function renderSegmentos(segmentos) {
+    if (!segmentos) return null;
+    return segmentos.map((segmento, index) => {
+      if (segmento.destaque === "italico") {
+        return <em key={index}>{segmento.texto}</em>;
+      }
+      if (segmento.destaque === "negrito") {
+        return <strong key={index}>{segmento.texto}</strong>;
+      }
+      return <span key={index}>{segmento.texto}</span>;
+    });
+  }
 
   return (
     <div className={Styles.pagina}>
@@ -146,59 +114,51 @@ export default function Ref() {
 
       <main className={style.containerReferencias}>
 
-          <h3 className={styles.tituloFormulario}>
-              ELABORAR REFERÊNCIA A LIVROS:
-          </h3>
+        <h3 className={styles.tituloFormulario}>
+          REFERÊNCIA E CITAÇÃO:
+        </h3>
 
-          <form
-              className={style.formReferencias}
-              onSubmit={handleSubmit}
-          >
+        {referencia && citacao ? (
+          <div className={style.saidaResultado}>
 
+            <div className={styles.campo}>
+              <label className={styles.labelEscuro}>
+                Referência:
+              </label>
+              <div className={style.valorReferencia}>
+                {renderSegmentos(referencia.segmentos)}
+              </div>
+            </div>
 
-          <section className={styles.coluna}>
+            <div className={styles.campo}>
+              <label className={styles.labelEscuro}>
+                Citação indireta (chamada entre parênteses):
+              </label>
+              <div className={style.valorReferencia}>
+                {renderSegmentos(citacao.chamada.segmentos)}
+              </div>
+            </div>
 
-                    <div className={styles.campo}>
-                        <label className={styles.labelEscuro}>
-                            Referência:
-                        </label>
-
-                        <label className={styles.labelEscuro}>
-
-                        </label>
-                    </div>
-
-                    <div className={styles.campo}>
-                        <label className={styles.labelEscuro}>
-                            Citação com Autor Incluido no Texto:
-                        </label>
-
-                        <label className={styles.labelEscuro}>
-
-                        </label>
-                    </div>
-
-                    <div className={styles.campo}>
-                        <label className={styles.labelEscuro}>
-                            Citação com Autor Não Incluido no Texto:
-                        </label>
-
-                        <label className={styles.labelEscuro}>
-
-                        </label>
-                    </div>
-
-          </section>
-
-          <button
-              type="submit"
+          </div>
+        ) : (
+          <div className={style.semResultado}>
+            <p>Gere uma referência primeiro.</p>
+            <button
               className={styles.btnGerar}
-              onClick={() => navigate("/InicioPage")}
-          >
-              Voltar
-          </button>
+              onClick={() => navigate("/Livros")}
+            >
+              Ir para o formulário
+            </button>
+          </div>
+        )}
 
-          </form>
+        <button
+          type="button"
+          className={styles.btnGerar}
+          onClick={() => navigate("/InicioPage")}
+        >
+          Voltar
+        </button>
 
       </main>
 

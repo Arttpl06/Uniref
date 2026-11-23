@@ -36,7 +36,7 @@ Cada item de lista dinâmica precisa vir completo: um autor `person` exige o nom
   - `livro.js`: composição da referência de livro.
   - `helpers.js`: autores, datas, edição, publicação, descrição física, suporte, série, acesso e pontuação.
   - `version.js`: `versaoNorma` e `versaoFormatador`.
-- Testes: `cd shared && node --test schemas/livro.test.js` (53 casos) e `cd backend && npm test` (38 casos do motor, arquivo `livro.formatador.test.js`, incluindo integração com o schema).
+- Testes: `cd shared && node --test schemas/livro.test.js` (53 casos) e `cd backend && npm test` (38 casos do motor de referências, 5 de domínio, 19 de autenticação e 25 de citações).
 - Cobertura desta etapa: autoria pessoal e institucional, subordinação, autoria desconhecida, 1 a 4+ autores, `et al.`, qualificação de organizador/editor/compilador, título e subtítulo, outra responsabilidade, edição, local, editora, ano livre, páginas/volumes/folhas, suporte eletrônico com detalhe de páginas, série, nota, URL e data de acesso.
 - Decisões de formatação:
   - Apenas o título recebe negrito; o subtítulo não.

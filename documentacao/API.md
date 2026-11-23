@@ -10,6 +10,7 @@ Base: `/api/v1`. JSON UTF-8. Autenticação por Bearer token (Firebase Auth). Es
 | POST /auth/sync | Token Firebase válido | Bearer token; valida os domínios @edu.unifor.br e @unifor.br e faz upsert do usuário no MySQL | 200 |
 | GET /auth/me | Autenticado | Usuário atual sem dados sensíveis | 200 |
 | POST /references/preview | Público | Documento bibliográfico, sem persistência | 200 |
+| POST /citations/preview | Público | Documento bibliográfico; chamada autor-data, sem persistência | 200 |
 | POST /references | Autenticado | Documento; header Idempotency-Key UUID | 201 ou 200 em repetição |
 | GET /references | Autenticado | page, pageSize, type e q; título no filtro q | 200 |
 | GET /references/:id | Autenticado | Consulta por id e usuário autenticado | 200 |
@@ -149,24 +150,29 @@ Usar fetch centralizado, header `Authorization: Bearer <idToken>` nas rotas aute
 
 Em desenvolvimento, configurar proxy Vite de /api para a API local. Em produção, servir SPA e API sob a mesma origem via proxy reverso. Se forem origens separadas, permitir apenas a origem explícita; nunca CORS `*`. O ID token do Firebase é gerenciado pelo SDK no cliente.
 
-## Citações: novo contrato da entrega final
+## Citações: chamada autor-data
 
-`POST /api/v1/citations/preview`, com rate limit: gera chamada/citação sem persistir. Permite exatamente uma fonte: `source.document` com o documento estruturado do contrato de referências, ou `source.referenceId` UUID de referência salva. A segunda opção exige login e busca por id + userId; retorna 404 para fonte alheia.
+`POST /api/v1/citations/preview`, público como a prévia de referências: gera a chamada da citação sem persistir. A fonte é o documento estruturado do contrato de referências (`fonte.documento`). `fonte.referenciaId` existe para a persistência futura e hoje responde 422 `FONTE_NAO_SUPORTADA`.
 
 ```json
 {
-  "source": { "referenceId": "6f21cf49-b00a-438d-971d-1e9f6ba47b06" },
-  "system": "authorDate",
-  "kind": "directShort",
-  "placement": "parenthetical",
-  "excerpt": "A organização facilita a consulta.",
-  "locator": { "kind": "page", "value": "12" },
-  "sourceHasNoLocator": false
+  "fonte": {
+    "documento": { "tipo": "livro", "...": "..." }
+  }
 }
 ```
 
-Exemplo fictício, com chamada esperada `(Silva, 2025, p. 12)` para uma fonte de Ana Silva de 2025. `kind`: indirect, directShort ou directLong. `placement`: narrative ou parenthetical. `locator`: page ou location, com texto limitado e validado; null somente nas condições de CITACOES.md. Não aceitar author/year extras para sobrescrever os metadados da fonte salva.
+A chamada é sempre indireta, no sistema autor-data, com o autor entre parênteses (NBR 10520:2023, 7.2 e 6.1.3): `(Silva, 2025)`. Na citação indireta a localização é opcional e não é solicitada. A abreviação com `et al.` é a do próprio documento (campo `abreviacao` do formulário), para não haver duas fontes de verdade.
 
-Resposta: `{data: {callout, composedText, segments, presentation, warnings, citationStandardVersion, citationFormatterVersion}}` (contrato de citações permanece como está por enquanto). Norma de citação: `ABNT NBR 10520:2023`. `composedText` é null se a indireta solicitar somente chamada. `presentation` identifica inline ou block e fornece orientações; a aplicação não garante layout no editor de destino. Usar os mesmos erros padronizados da API; direta sem trecho ou localização contraditória retorna 422. Não aceitar source com document e referenceId juntos.
+Resposta: `{data: {chamada, avisos, versaoNorma, versaoFormatador}}`, com `chamada: {texto, segmentos}`. Norma: `ABNT NBR 10520:2023`. `segmentos` preserva os destaques tipográficos (`nenhum` ou `italico`); só `et al.` recebe itálico, como manda a 6.1.2. A concatenação dos segmentos é exatamente `chamada.texto`.
 
-Limites técnicos propostos: excerpt até 10.000 caracteres, locator.value até 100, body total 64 KiB. Não armazenar texto citado em logs. Chamada narrativa fica separada para encaixe na redação; a composição demonstrativa pode usar dois-pontos depois dela, sem inventar frases atribuídas ao autor.
+Regras aplicadas (6.1.1 a 6.1.4):
+
+- pessoa física: sobrenome em maiúsculas e minúsculas (6.1.1.1);
+- pessoa jurídica: nome completo ou sigla, como digitado (6.1.1.2);
+- instituição governamental: órgão superior ou jurisdição, ignorando a subordinação (6.1.1.3);
+- fonte sem autoria: entrada pelo título, com a supressão indicada por `[...]` (6.1.1.4);
+- dois ou três autores separados por `;`; quatro ou mais usam `et al.` quando o documento traz `abreviacao: true`, ou listam todos os autores (6.1.2);
+- ano de publicação preservado como informado (`[1969?]`, `c1993`).
+
+Erros: 422 `VALIDATION_ERROR` com `fields` para documento inválido, documento e `referenciaId` juntos (ou nenhum) e campos extras; 422 `FONTE_NAO_SUPORTADA` para `referenciaId`. Demais falhas: `INTERNAL` 500. O corpo total é limitado a 64 KiB.

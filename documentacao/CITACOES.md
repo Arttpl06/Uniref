@@ -1,67 +1,59 @@
-# Citações: especificação da entrega final
+# Citações: especificação
 
 ## Escopo e distinção
 
-Citação é a menção à fonte dentro do texto; referência identifica a fonte na lista bibliográfica. Ambas estão na entrega final confirmada pelo grupo. Referências seguem a base NBR 6023:2025; citações usam NBR 10520:2023, fornecida no acervo.
+Citação é a menção à fonte dentro do texto; referência identifica a fonte na lista bibliográfica. Ambas estão na entrega confirmada pelo grupo. Referências seguem a base NBR 6023:2025; citações usam NBR 10520:2023, fornecida no acervo.
 
-Delimitação técnica proposta: sistema autor-data; chamada narrativa (autor no texto) e parentética (autor entre parênteses); citação indireta e direta curta/longa. Essa delimitação não significa suporte integral a todos os casos da norma. Sistema numérico, apud e geração automática de sufixos a/b a partir de uma bibliografia completa ficam fora da cobertura proposta.
+Delimitação: sistema autor-data, citação indireta, chamada parentética — `(Silva, 2025)`. O motor monta a chamada; a paráfrase é escrita pelo usuário e não é gerada nem armazenada. Chamada narrativa, citação direta (curta e longa), localizador, sistema numérico, apud e sufixos a/b automáticos ficam fora desta entrega.
 
 ## Exemplo fictício
 
 Fonte de Ana Silva publicada em 2025:
 
-| Modalidade | Saída ilustrativa |
+| Item | Saída |
 |---|---|
-| Indireta, narrativa | Silva (2025) |
-| Indireta, parentética | (Silva, 2025) |
-| Direta com página, narrativa | Silva (2025, p. 12) |
-| Direta com página, parentética | (Silva, 2025, p. 12) |
+| Chamada da citação indireta | (Silva, 2025) |
 
-Uma composição curta fictícia seria: “A organização facilita a consulta.” (Silva, 2025, p. 12). Pontuação final e casos de aspas internas precisam integrar o corpus de homologação antes da liberação.
+No texto, o usuário escreve a paráfrase e insere a chamada ao final: "A organização do acervo facilita a consulta (Silva, 2025)." A localização é opcional na citação indireta (7.2) e não é solicitada.
 
-Para pessoa física, a chamada da NBR 10520:2023 usa maiúsculas e minúsculas, inclusive dentro dos parênteses. Não reutilizar o sobrenome convertido para caixa alta pelo formatador da referência. Preservar grafia informada: não aplicar conversão ingênua a nomes compostos.
+Para pessoa física, a chamada da NBR 10520:2023 usa maiúsculas e minúsculas, inclusive dentro dos parênteses. Não reutilizar o sobrenome convertido para caixa alta pelo formatador da referência. Preservar a grafia informada: não aplicar conversão ingênua a nomes compostos.
 
 ## Dados e comportamento
 
-- Fonte: metadados preenchidos no gerador ou referência salva pertencente ao usuário.
-- Modalidade: indireta, direta curta ou direta longa.
-- Posição: narrativa ou parentética.
-- Trecho: obrigatório na direta; opcional na indireta. A paráfrase deve vir do usuário, não ser produzida pelo sistema.
-- Localizador: página ou outra localização disponível. Em direta, solicitar o localizador existente; para fonte sem localizador, exigir indicação explícita dessa condição e mostrar orientação. Nunca inventar página. Em indireta, localização é opcional.
+- Fonte: documento estruturado do contrato de referências. `referenciaId` fica reservado para a persistência; enquanto não houver tabela de referências, responde 422 `FONTE_NAO_SUPORTADA`.
+- Abreviação: o campo `abreviacao` do próprio documento decide entre `et al.` e a lista completa, para não haver duas fontes de verdade.
+- Sem trecho, localizador, página ou composição: a entrega devolve somente a chamada que o usuário insere no texto.
 - Fonte e parâmetros inválidos devem produzir mensagens por campo, sem perder o formulário.
 
-A norma distingue citações curtas de até três linhas e longas com mais de três linhas no documento. O usuário escolhe a modalidade conforme o trabalho: não é possível inferi-la pelo número de caracteres ou pela largura da prévia no navegador.
-
-A direta curta usa aspas; a longa usa bloco sem aspas externas, letra menor, espaço simples e recuo padronizado. A norma recomenda 4 cm de recuo. Mostrar essas orientações e uma prévia ilustrativa. A cópia em texto simples não preserva recuo, fonte ou espaçamento; avisar para conferir no editor de destino.
+A norma distingue citações curtas de até três linhas e longas com mais de três linhas, mas essas modalidades exigem trecho e localizador e não fazem parte desta entrega. O sistema não infere modalidade pelo tamanho de texto.
 
 ## Arquitetura e algoritmo
 
-1. Resolver a fonte e validar propriedade se salva.
-2. Validar opções e metadados; obter autores e data estruturados, nunca fazer parsing de textoPuro.
-3. Selecionar regra de responsabilidade e data para chamada.
-4. Montar chamada conforme posição e localizador.
-5. Compor trecho opcional com marcação controlada conforme modalidade.
-6. Retornar segmentos, chamada, composição, orientações, avisos e versões.
+Um motor geral da NBR 10520 e um extrator de metadados por tipo de documento. As regras de chamada (6.1.1 a 6.1.4) não dependem do tipo: ele só define de onde saem responsabilidade, data e título. `extrairFonteLivro` atende livro; novos tipos entram com um extrator novo e o núcleo permanece o mesmo. Tipo sem extrator responde 422 `FONTE_NAO_SUPORTADA`.
 
-As funções de citação não dependem de HTTP ou banco. Compartilhar normalização de dados com referências, mas manter regras de apresentação distintas. Novos módulos: modules/citations, domain/citations e features/citations. O contrato HTTP está em API.md.
+1. Validar a fonte e os metadados com o schema compartilhado.
+2. Extrair as entradas de responsabilidade, o ano e o título — nunca fazer parsing de `textoPuro`.
+3. Montar a chamada parentética conforme quantidade de autores, tipo de responsabilidade e ano.
+4. Retornar chamada, segmentos, avisos e versões.
 
-## Cobertura a homologar
+As funções de citação não dependem de HTTP ou banco. Compartilhar a extração de sobrenome com referências (`splitNomePessoa`), mas manter regras de apresentação distintas. Módulos: `modules/citations`, `domain/citations` e o schema em `shared/schemas/citacao.js`. O contrato HTTP está em API.md.
+
+## Cobertura
 
 | Caso | Evidência necessária |
 |---|---|
-| Um autor, narrativa/parentética | Saídas e caixa do sobrenome revisadas |
-| Dois, três e mais autores | Separadores e uso consistente de abreviação conforme regra aprovada |
-| Autor institucional | Forma de nome/sigla revisada |
-| Autoria desconhecida | Entrada pelo título conforme regra específica |
-| Direta curta e longa | Aspas, localizador, bloco e orientações |
-| Indireta | Chamada sem apresentar paráfrase como transcrição literal |
-| Fonte não paginada | Não inventar página; usar localização existente ou condição explícita |
-| Homônimos e mesmo autor/ano | Aviso contextual; não inventar a/b ou alegar desambiguação automática |
+| Um autor | Saída e caixa do sobrenome revisadas |
+| Dois e três autores | Separador `;` entre as entradas |
+| Quatro ou mais autores | `et al.` em itálico quando abreviado; lista completa quando não |
+| Autor institucional | Nome ou sigla como digitado; subordinação ignorada |
+| Autoria desconhecida | Entrada pelo título com `[...]` conforme 6.1.1.4 |
+| Sobrenome composto | Assaf Neto, La Torre e Del Bianco preservados |
+| Ano não convencional | `[1969?]` e `c1993` preservados |
 
-Todos os casos estão planejados, ainda sem implementação ou homologação. Casos normativos sem suporte devem ser bloqueados ou marcados claramente para revisão. A ausência de um gerenciador do trabalho completo impede garantir correspondência automática de sufixos autor/ano em toda a bibliografia.
+Fora da cobertura: homônimos (6.1.5), mesmo autor e ano com a/b (6.1.6), vários documentos na mesma chamada (6.1.7 e 6.1.8), apud (7.3) e citação direta. A ausência de um gerenciador do trabalho completo impede garantir correspondência automática de sufixos autor/ano em toda a bibliografia.
 
 ## Aceite
 
-RF15 e RF19–22 atendidos; corpus normativo revisado; teste com referência de outro usuário rejeitado; cópia simples/rica/manual testada; nenhuma citação ou paráfrase inventada; demonstração integrada de referência e citação. Persistência de trechos e histórico separado de citações não são requisitos desta versão.
+Chamada conferida contra os exemplos da norma; nenhuma paráfrase inventada; demonstração integrada de referência e citação; prévia sem persistência. Persistência de trechos e histórico separado de citações ficam fora desta entrega.
 
-Fontes locais: NBR 10520:2023, seções 6.1, 7.1, 7.1.1 e 7.2. Os exemplos deste documento são fictícios.
+Fontes locais: NBR 10520:2023, seções 6.1, 6.1.1 a 6.1.4, 7.2. Os exemplos deste documento são fictícios.

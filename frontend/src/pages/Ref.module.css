@@ -5,11 +5,29 @@
     box-sizing: border-box;
 }
 
-.formReferencias {
+.saidaResultado {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 14px;
-    max-width: 150vh;
-    width: 100%;
+    gap: 18px;
+    max-width: 700px;
+    margin-top: 24px;
+}
+
+.valorReferencia {
+    margin-top: 6px;
+    font-family: "Courier New", monospace;
+    font-size: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.semResultado {
+    margin-top: 40px;
+    text-align: center;
+    color: #666;
+}
+
+.semResultado button {
+    margin-top: 14px;
 }
 

@@ -5,6 +5,7 @@ import style from "./livros.module.css";
 import logoUniforBranca from "../assets/logoUniforBranca.png"
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { apiFetch } from '../services/api.js';
 
 export default function Livros() {
 
@@ -47,6 +48,8 @@ export default function Livros() {
       dataAcesso: ""
   });
 
+  const [carregando, setCarregando] = useState(false);
+
   const handleChange = (e) => {
       const { name, value } = e.target;
 
@@ -56,10 +59,143 @@ export default function Livros() {
       }));
   };
 
-  const handleSubmit = (e) => {
+  const campoOpcional = (valor) => {
+      if (typeof valor === "string" && valor.trim() === "") return null;
+      return valor;
+  };
+
+  const mapearTipoPagina = (valor) => {
+      switch (valor) {
+          case "Nº de páginas": return "paginas";
+          case "Volumes": return "volumes";
+          case "Folhas": return "folhas";
+          default: return "paginas";
+      }
+  };
+
+  const mapearSuporteFisico = (valor) => {
+      switch (valor) {
+          case "Nenhum": return "nenhum";
+          case "CD-ROM": return "cdrom";
+          case "DVD": return "dvd";
+          case "E-Book": return "ebook";
+          case "Blu-ray": return "blu_ray";
+          case "Outro": return "outro";
+          default: return "nenhum";
+      }
+  };
+
+  const montarDocumento = () => {
+      const f = formulario;
+      const autores = [];
+      let autoria = "conhecida";
+      let quantidadeAutores = null;
+
+      if (f.tipoAutor === "Desconhecido") {
+          autoria = "desconhecida";
+      } else if (f.tipoAutor === "Pessoa(s) Física(s)") {
+          quantidadeAutores = Number(f.quantidadeAutores) || 1;
+          const nomes = [f.autor];
+          for (let i = 2; i <= 10; i += 1) {
+              nomes.push(f[`autor${i}`]);
+          }
+          for (const nome of nomes) {
+              if (nome && nome.trim() !== "") {
+                  autores.push({ tipo: "pessoa", nome });
+              }
+          }
+      } else if (f.tipoAutor === "Pessoa(s) Jurídica(s)") {
+          // O formulário tem um único campo de instituição.
+          quantidadeAutores = 1;
+          if (f.autor && f.autor.trim() !== "") {
+              autores.push({
+                  tipo: "instituicao",
+                  nomeInstituicao: f.autor,
+                  subordinacao: campoOpcional(f["Subordinação"]),
+              });
+          }
+      }
+
+      // Campos opcionais do schema são omitidos quando vazios: o schema
+      // aplica o default null, mas não aceita null explícito.
+      const suporteFisico = f.tipoSuporteFisico === "Nenhum"
+          ? { meio: "nenhum" }
+          : {
+              meio: mapearSuporteFisico(f.tipoSuporteFisico),
+              ...(f.tipoSuporteFisico === "Outro"
+                  ? { outroMeio: f.outroSuporteFisico }
+                  : {}),
+              ...(f.tipoSuporteFisico !== "E-Book"
+                  ? { quantidade: f.qtdSuporteFisico }
+                  : {}),
+          };
+
+      const numeracaoPaginas = f.quantidadePaginas && f.quantidadePaginas.trim() !== ""
+          ? { tipo: mapearTipoPagina(f.tipoPagina), valor: f.quantidadePaginas }
+          : undefined;
+
+      const online = f.online === "Sim";
+
+      return {
+          tipo: "livro",
+          autoria,
+          quantidadeAutores: autoria === "conhecida" ? quantidadeAutores : null,
+          responsabilidade: f.responsabilidade || "Autor da Obra",
+          abreviacao:
+              autoria === "conhecida" &&
+              quantidadeAutores >= 4 &&
+              f.abreviada === "Sim",
+          autores,
+          titulo: f.titulo,
+          subtitulo: campoOpcional(f.subtitulo),
+          outraResponsabilidade: campoOpcional(f.tipoResponsa),
+          serie: campoOpcional(f.serie),
+          edicao: campoOpcional(f.edicao),
+          localPublicacao: f.local,
+          editora: f.editora,
+          anoPublicacao: f.ano,
+          notas: campoOpcional(f.notas),
+          online,
+          url: online ? campoOpcional(f.URL) : null,
+          dataAcesso: online ? campoOpcional(f.dataAcesso) : null,
+          numeracaoPaginas,
+          suporteFisico,
+      };
+  };
+
+  const handleSubmit = async (e) => {
       e.preventDefault();
 
-      console.log("Dados do formulário:", formulario);
+      setCarregando(true);
+
+      try {
+          const documento = montarDocumento();
+
+          const [referencia, citacao] = await Promise.all([
+              apiFetch('/references/preview', {
+                  method: 'POST',
+                  body: documento,
+                  authenticated: false,
+              }),
+              apiFetch('/citations/preview', {
+                  method: 'POST',
+                  body: { fonte: { documento } },
+                  authenticated: false,
+              }),
+          ]);
+
+          navigate('/Ref', {
+              state: { referencia: referencia.data, citacao: citacao.data },
+          });
+      } catch (erro) {
+          const detalhes = (erro.fields || [])
+              .map((campo) => campo.message)
+              .join('\n');
+
+          alert(detalhes || erro.message || 'Falha ao gerar referência e citação.');
+      } finally {
+          setCarregando(false);
+      }
   };
 
 
@@ -67,14 +203,8 @@ export default function Livros() {
 
   const [pesquisa, setPesquisa] = useState("");
 
-  function alternarMenu(index) {
-    setMenuAtivo(menuAtivo === index ? null : index);
-    setPerfilAberto(false);
-  }
-
   function alternarPerfil() {
     setPerfilAberto(!perfilAberto);
-    setMenuAtivo(null);
   }
 
 
@@ -695,9 +825,9 @@ export default function Livros() {
           <button
               type="submit"
               className={styles.btnGerar}
-              onClick={() => navigate("/Ref")}
+              disabled={carregando}
           >
-              Gerar Referências e Citações
+              {carregando ? "Gerando…" : "Gerar Referências e Citações"}
           </button>
 
           </form>

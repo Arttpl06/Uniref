@@ -1,5 +1,6 @@
-import {Sequelize} from 'sequelize';
+import { Sequelize } from 'sequelize';
 
+const dbSsl = process.env.DB_SSL === 'true' ? { minVersion: 'TLSv1.2' } : undefined;
 
 export const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -11,5 +12,7 @@ export const sequelize = new Sequelize(
     dialect: 'mysql',
     logging: false,
     timezone: '+00:00',
+    pool: { max: 3, min: 1, idle: 10000, acquire: 60000 },
+    ...(dbSsl ? { dialectOptions: { ssl: dbSsl } } : {}),
   }
 );

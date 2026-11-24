@@ -35,10 +35,18 @@ export async function sync(req, res) {
 
     console.error('Erro ao sincronizar usuário:', error);
 
+    const causa = error.original ?? error.parent ?? error;
+
     return res.status(500).json({
       error: {
         code: 'INTERNAL',
-        message: 'Falha interna.'
+        message: 'Falha interna.',
+        detail: {
+          name: error.name,
+          code: causa?.code,
+          errno: causa?.errno,
+          sqlState: causa?.sqlState ?? causa?.sql_state,
+        },
       }
     });
   }

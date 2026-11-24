@@ -7,3 +7,4 @@ coverage/
 *.log
 firebase-service-account*.json
 *-firebase-adminsdk*.json
+/backend/*firebase-adminsdk*.json

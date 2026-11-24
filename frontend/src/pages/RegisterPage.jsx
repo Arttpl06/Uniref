@@ -17,7 +17,7 @@ import { auth } from "../services/firebase.js";
 import { authErrorMessage } from "../services/authErrors.js";
 
 function isAllowedDomain(value) {
-    const allowed = (import.meta.env.VITE_ALLOWED_EMAIL_DOMAINS || "")
+    const allowed = (import.meta.env.VITE_ALLOWED_EMAIL_DOMAINS || "@edu.unifor.br,@unifor.br")
         .split(",")
         .map((domain) => domain.trim().toLowerCase())
         .filter(Boolean)

@@ -1,4 +1,5 @@
 import {syncFirebaseUser,getMyProfile} from './auth.service.js';
+import { dbHostInfo } from '../../config/database.js';
 
 export async function sync(req, res) {
   try {
@@ -46,6 +47,7 @@ export async function sync(req, res) {
           code: causa?.code,
           errno: causa?.errno,
           sqlState: causa?.sqlState ?? causa?.sql_state,
+          dbHost: dbHostInfo(),
         },
       }
     });
